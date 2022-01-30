@@ -21,12 +21,12 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<ApiSuccessResponse>> Get()
         {
             try
             {
                 var result = await _service.Get();
-                return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado"));
+                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado");
             }
             catch (Exception e)
             {
@@ -36,12 +36,16 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}", Name = "GetWithId")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult<ApiSuccessResponse>> Get(int id)
         {
             try
             {
                 var result = await _service.Get(id);
-                return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário encontrado"));
+                if(result == null)
+                {
+                    return NotFound();
+                }
+                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário encontrado");
             }
 
             catch (Exception e)
@@ -51,12 +55,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CriarUsuarioDTO usuario)
+        public async Task<ActionResult<ApiSuccessResponse>> Post([FromBody] CriarUsuarioDTO usuario)
         {
             try
             {
                 var result = await _service.Post(usuario);
-                return Ok(new ApiSuccessResponse((int)HttpStatusCode.Created, result, "Usuário cadastrado"));
+                return new ApiSuccessResponse((int)HttpStatusCode.Created, result, "Usuário cadastrado");
             }
             catch (DomainException e)
             {
@@ -69,14 +73,14 @@ namespace API.Controllers
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
+        public async Task<ActionResult<ApiSuccessResponse>> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
         {
             try
             {
                 var result = await _service.Put(id, usuario);
                 if (result != null)
-                    return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário alterado"));
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest));
+                    return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário alterado");
+                return NotFound();
             }
             catch (DomainException e)
             {
@@ -90,12 +94,14 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<ApiSuccessResponse>> Delete(int id)
         {
             try
             {
                 var result = await _service.Delete(id);
-                return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário excluído"));
+                if(!result)
+                    return NotFound();
+                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário excluído");
             }
             catch (Exception e)
             {
