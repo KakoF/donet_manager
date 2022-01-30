@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Exceptions;
+using Domain.Validators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class UsuarioModel
+    public class UsuarioModel : BaseModel
     {
         private string _nome;
         public string Nome
@@ -21,18 +23,26 @@ namespace Domain.Models
             get { return _email; }
             set { _email = value; }
         }
-        private DateTime _dataCriacao;
-        public DateTime DataCriacao
+
+        public UsuarioModel()
         {
-            get { return _dataCriacao; }
-            set { _dataCriacao = (value == null ? DateTime.UtcNow : value); }
+            _errors = new List<string>();
         }
 
-        private DateTime _dataAtualizacao;
-        public DateTime DataAtualizacao
+        public override bool Validate()
         {
-            get { return _dataAtualizacao; }
-            set { _dataAtualizacao = (DataCriacao != null ? DateTime.UtcNow : value); }
+            var validator = new UsuarioValidator();
+            var validation = validator.Validate(this);
+
+            if (!validation.IsValid)
+            {
+                foreach (var error in validation.Errors)
+                    _errors.Add(error.ErrorMessage);
+
+                throw new DomainException($"Alguns campos estão inválidos!", _errors);
+            }
+
+            return true;
         }
     }
 }

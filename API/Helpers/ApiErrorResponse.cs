@@ -7,12 +7,12 @@ namespace API.Helpers
         public int StatusCode { get; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; }
-        public object Erros { get; }
+        public object Errors { get; }
         public ApiErrorResponse(int statusCode, string message = null, object errors = null)
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
-            Erros = errors;
+            Errors = errors;
         }
         private static string GetDefaultMessageForStatusCode(int statusCode)
         {

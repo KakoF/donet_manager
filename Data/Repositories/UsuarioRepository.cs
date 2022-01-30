@@ -22,14 +22,14 @@ namespace Data.Repositories
         public async Task<bool> Delete(int id)
         {
             string sql = " Delete FROM [dbo].[Usuario] Where Id = @Id";
-            var delete = await _dbConnector.dbConnection.QueryFirstOrDefaultAsync(sql, new { Id = id }, _dbConnector.dbTransaction);
-            return true;
+            var delete = await _dbConnector.dbConnection.ExecuteAsync(sql, new { Id = id }, _dbConnector.dbTransaction);
+            return Convert.ToBoolean(delete);
         }
 
         public async Task<Usuario> Get(int id)
         {
             string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario] Where Id = @Id";
-            var usuario = await _dbConnector.dbConnection.QueryFirstAsync<Usuario>(sql, new {Id = id}, _dbConnector.dbTransaction);
+            var usuario = await _dbConnector.dbConnection.QueryFirstOrDefaultAsync<Usuario>(sql, new {Id = id}, _dbConnector.dbTransaction);
             return usuario;
         }
 

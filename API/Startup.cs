@@ -1,3 +1,4 @@
+using API.Helpers.Middleware;
 using AutoMapper;
 using Data.DataConnector;
 using DI.DependencyInjection;
@@ -31,11 +32,20 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("default");
-            services.AddScoped<IDbConnector>(db => new SqlServerConnector(connectionString));
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetConnectionString("redis");
+                options.InstanceName = Configuration["redisName"];
+
+            });
+            services.AddScoped<IDbConnector>(db => new SqlServerConnector(Configuration.GetConnectionString("sqlServer")));
             ConfigureService.ConfigureDependenciesService(services);
             ConfigureRepository.ConfigureDependenciesRepository(services);
-            var config = new AutoMapper.MapperConfiguration(cfg =>
+            services.AddControllers(options => options.Filters.Add<ValidationMiddleware>())
+               .AddNewtonsoftJson(options =>
+                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+               .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+            var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new EntityToDtoProfile());
                 cfg.AddProfile(new ModelToEntityProfile());

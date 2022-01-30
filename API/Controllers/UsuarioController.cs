@@ -1,5 +1,6 @@
 ﻿using API.Helpers;
 using Domain.DTO.Usuario;
+using Domain.Exceptions;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -42,6 +43,7 @@ namespace API.Controllers
                 var result = await _service.Get(id);
                 return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário encontrado"));
             }
+
             catch (Exception e)
             {
                 return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
@@ -54,9 +56,11 @@ namespace API.Controllers
             try
             {
                 var result = await _service.Post(usuario);
-                if (result != null)
-                    return Ok(new ApiSuccessResponse((int)HttpStatusCode.Created, result, "Usuário cadastrado"));
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest));
+                return Ok(new ApiSuccessResponse((int)HttpStatusCode.Created, result, "Usuário cadastrado"));
+            }
+            catch (DomainException e)
+            {
+                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
             }
             catch (Exception e)
             {
@@ -73,6 +77,10 @@ namespace API.Controllers
                 if (result != null)
                     return Ok(new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário alterado"));
                 return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest));
+            }
+            catch (DomainException e)
+            {
+                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
             }
             catch (Exception e)
             {

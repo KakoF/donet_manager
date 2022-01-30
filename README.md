@@ -1,9 +1,14 @@
-## Docker Sql Server
+# Exemplo para estudo
+## Docker (Sql Server e Redis)
+
+Arquivo composer irá inicializar as dependências de infra, rodar o comando na raíz onde o arquivo se encontra:
 ```sh
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=!Manager010203@#" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-CU15-ubuntu-20.04
+docker-compose up -d
 
 ```
 
+## Script
+script para criar a tabela de Usuário
 ```sh
 CREATE TABLE master.dbo.Usuario (
 	Id bigint IDENTITY(0,1) NOT NULL,
@@ -12,4 +17,12 @@ CREATE TABLE master.dbo.Usuario (
 	DataCriacao datetime2(0) NOT NULL,
 	DataAtualizacao datetime2(0) NULL
 );
+```
+
+## Dependências e execução do projeto
+Aqruivo appsettings já aponta para a infra que docker irá subir
+```sh
+- Executar o restore ou build da aplicação para instalação das dependências
+
+- Rodar o projeto
 ```

@@ -1,6 +1,8 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.Interfaces.Redis;
+using Domain.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Services;
+using Service.Services.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ namespace DI.DependencyInjection
         public static void ConfigureDependenciesService(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<IUsuarioService, UsuarioService>();
+            serviceCollection.AddScoped<IRedisIntegrator, RedisIntegrator>();
         }
     }
 }

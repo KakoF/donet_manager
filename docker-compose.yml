@@ -1,0 +1,22 @@
+version: '3'
+services:
+  redis:
+    container_name: 'redis_server'
+    image: redis
+    restart: always
+    command: redis-server --requirepass Manager010203!@#
+    ports:
+      - '6379:6379'
+  sqlserver:
+    container_name: 'sql_server'
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    volumes:
+      - ~/apps/mssql/data:/var/lib/mssqlql/data
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Manager010203!@#
+    ports:
+      - '1433:1433'
+    expose:
+      - '1433'
