@@ -34,7 +34,7 @@ namespace Service.Services
         {
             var entity = await _repository.Get(id);
             if (entity == null)
-                throw new DomainException($"Usuário não encontrado");
+                return false;
             var delete = await _repository.Delete(id);
             if(!delete)
                 throw new DomainException($"Não foi possível excluir o Usuário");
@@ -76,8 +76,8 @@ namespace Service.Services
         public async Task<UsuarioDTO> Put(int id, AlterarUsuarioDTO data)
         {
             var entity = await _repository.Get(id);
-            if(entity == null)
-                throw new DomainException($"Usuário não encontrado");
+            if (entity == null)
+                return null;
             var model = _mapper.Map<UsuarioModel>(entity);
             model.Validate();
             _mapper.Map(data, model);
