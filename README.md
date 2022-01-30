@@ -2,7 +2,7 @@
 ```sh
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=!Manager010203@#" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-CU15-ubuntu-20.04
 
-``
+```
 
 ```sh
 CREATE TABLE master.dbo.Usuario (
