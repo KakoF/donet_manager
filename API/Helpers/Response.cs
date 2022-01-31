@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace API.Helpers
 {
-    public class ApiSuccessResponse
+    public class Response
     {
-        public object Data { get; }
         public int StatusCode { get; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; }
-        public ApiSuccessResponse(int statusCode, object data, string message = null)
+        public Response(int statusCode, string message = null)
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
-            Data = data;
         }
+
         private static string GetDefaultMessageForStatusCode(int statusCode)
         {
             switch (statusCode)

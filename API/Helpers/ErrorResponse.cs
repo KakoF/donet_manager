@@ -2,13 +2,13 @@
 
 namespace API.Helpers
 {
-    public class ApiErrorResponse
+    public class ErrorResponse
     {
         public int StatusCode { get; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; }
         public object Errors { get; }
-        public ApiErrorResponse(int statusCode, string message = null, object errors = null)
+        public ErrorResponse(int statusCode, string message = null, object errors = null)
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);

@@ -20,23 +20,23 @@ namespace API.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ApiSuccessResponse>> Get()
+        [HttpGet, Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDTO>))]
+        public async Task<ActionResult<ListSuccessResponse<UsuarioDTO>>> Get()
         {
             try
             {
                 var result = await _service.Get();
-                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado");
+                return new ListSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado");
             }
             catch (Exception e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
             }
         }
 
         [HttpGet]
         [Route("{id}", Name = "GetWithId")]
-        public async Task<ActionResult<ApiSuccessResponse>> Get(int id)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Get(int id)
         {
             try
             {
@@ -45,67 +45,71 @@ namespace API.Controllers
                 {
                     return NotFound();
                 }
-                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário encontrado");
+                return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário encontrado");
             }
 
             catch (Exception e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiSuccessResponse>> Post([FromBody] CriarUsuarioDTO usuario)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Post([FromBody] CriarUsuarioDTO usuario)
         {
             try
             {
                 var result = await _service.Post(usuario);
-                return new ApiSuccessResponse((int)HttpStatusCode.Created, result, "Usuário cadastrado");
+                return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.Created, result, "Usuário cadastrado");
             }
             catch (DomainException e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
             }
             catch (Exception e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
             }
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult<ApiSuccessResponse>> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
         {
             try
             {
                 var result = await _service.Put(id, usuario);
                 if (result != null)
-                    return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário alterado");
+                    return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário alterado");
                 return NotFound();
             }
             catch (DomainException e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
             }
             catch (Exception e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
             }
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult<ApiSuccessResponse>> Delete(int id)
+        public async Task<ActionResult<Response>> Delete(int id)
         {
             try
             {
                 var result = await _service.Delete(id);
                 if(!result)
                     return NotFound();
-                return new ApiSuccessResponse((int)HttpStatusCode.OK, result, "Usuário excluído");
+                return new Response((int)HttpStatusCode.OK, "Usuário excluído");
+            }
+            catch (DomainException e)
+            {
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message, e.Errors));
             }
             catch (Exception e)
             {
-                return BadRequest(new ApiErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.BadRequest, e.Message));
             }
         }
     }
