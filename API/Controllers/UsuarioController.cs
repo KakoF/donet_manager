@@ -43,7 +43,7 @@ namespace API.Controllers
                 var result = await _service.Get(id);
                 if(result == null)
                 {
-                    return NotFound();
+                    return BadRequest(new ErrorResponse((int)HttpStatusCode.NotFound, "Usuário não encontrado"));
                 }
                 return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário encontrado");
             }
@@ -80,7 +80,7 @@ namespace API.Controllers
                 var result = await _service.Put(id, usuario);
                 if (result != null)
                     return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário alterado");
-                return NotFound();
+                return BadRequest(new ErrorResponse((int)HttpStatusCode.NotFound, "Usuário não encontrado"));
             }
             catch (DomainException e)
             {
@@ -100,7 +100,7 @@ namespace API.Controllers
             {
                 var result = await _service.Delete(id);
                 if(!result)
-                    return NotFound();
+                    return BadRequest(new ErrorResponse((int)HttpStatusCode.NotFound, "Usuário não encontrado"));
                 return new Response((int)HttpStatusCode.OK, "Usuário excluído");
             }
             catch (DomainException e)

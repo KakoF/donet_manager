@@ -32,13 +32,7 @@ namespace Service.Services
 
         public async Task<bool> Delete(int id)
         {
-            var entity = await _repository.Get(id);
-            if (entity == null)
-                return false;
             var delete = await _repository.Delete(id);
-            if(!delete)
-                throw new DomainException($"Não foi possível excluir o Usuário");
-
             return delete;
 
         }
