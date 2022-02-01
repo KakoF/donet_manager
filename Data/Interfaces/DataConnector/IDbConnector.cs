@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Interfaces.Repositories.DataConnector
+namespace Data.Interfaces.DataConnector
 {
     // essa interface deve ficar no projeto Data
     public interface IDbConnector : IDisposable

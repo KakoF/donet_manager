@@ -1,11 +1,10 @@
-﻿using Domain.Entities;
+﻿using Dapper;
+using Data.Interfaces.DataConnector;
+using Domain.Entities;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Repositories.DataConnector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Dapper;
 using System.Threading.Tasks;
 
 namespace Data.Repositories
@@ -52,12 +51,12 @@ namespace Data.Repositories
                                  ,@Email
                                  ,@DataCriacao)";
 
-            data.Id = await _dbConnector.dbConnection.QuerySingleAsync<int>(sql, new
+            data.SetId(await _dbConnector.dbConnection.QuerySingleAsync<int>(sql, new
             {
                 Nome = data.Nome,
                 Email = data.Email,
                 DataCriacao = DateTime.Now,
-            }, _dbConnector.dbTransaction);
+            }, _dbConnector.dbTransaction));
 
             return data;
         }

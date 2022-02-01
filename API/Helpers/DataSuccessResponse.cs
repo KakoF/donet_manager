@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-
-namespace API.Helpers
+﻿namespace API.Helpers
 {
     public class DataSuccessResponse<T> : Response
     {

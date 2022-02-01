@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
+using Data.Interfaces.DataConnector;
+using Data.Interfaces.Redis;
 using Domain.DTO.Usuario;
 using Domain.Entities;
 using Domain.Exceptions;
-using Domain.Interfaces.Redis;
 using Domain.Interfaces.Repositories;
-using Domain.Interfaces.Repositories.DataConnector;
 using Domain.Interfaces.Services;
 using Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Services
@@ -32,6 +29,7 @@ namespace Service.Services
 
         public async Task<bool> Delete(int id)
         {
+            await Find(id);
             var delete = await _repository.Delete(id);
             return delete;
 
@@ -39,7 +37,7 @@ namespace Service.Services
 
         public async Task<UsuarioDTO> Get(int id)
         {
-            var entity = await _repository.Get(id);
+            var entity = await Find(id);
             return _mapper.Map<UsuarioDTO>(entity);
         }
 
@@ -69,9 +67,7 @@ namespace Service.Services
 
         public async Task<UsuarioDTO> Put(int id, AlterarUsuarioDTO data)
         {
-            var entity = await _repository.Get(id);
-            if (entity == null)
-                return null;
+            var entity = await Find(id);
             var model = _mapper.Map<UsuarioModel>(entity);
             model.Validate();
             _mapper.Map(data, model);
@@ -79,6 +75,15 @@ namespace Service.Services
             var result = await _repository.Put(id, entity);
             _cache.Remove("Usuarios");
             return _mapper.Map<UsuarioDTO>(result);
+        }
+
+        // Fazer um método genério para que verifique e retorne se a entidade<T> existe, caso não estoure exception
+        private async Task<Usuario> Find(int id)
+        {
+            var entity = _mapper.Map<Usuario>(await _repository.Get(id));
+            if (entity == null)
+                throw new DomainException("Registro não encontrado", 404);
+            return entity;
         }
     }
 }

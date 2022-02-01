@@ -1,9 +1,9 @@
 using API.Helpers.Middleware;
 using AutoMapper;
 using Data.DataConnector;
+using Data.Interfaces.DataConnector;
 using DI.DependencyInjection;
 using DI.Mappings;
-using Domain.Interfaces.Repositories.DataConnector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -72,6 +72,8 @@ namespace API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware(typeof(ErrorResponseMiddleware));
 
             app.UseRouting();
 

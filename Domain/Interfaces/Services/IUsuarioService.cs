@@ -1,8 +1,5 @@
 ﻿using Domain.DTO.Usuario;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Services
@@ -14,5 +11,6 @@ namespace Domain.Interfaces.Services
         Task<UsuarioDTO> Post(CriarUsuarioDTO data);
         Task<UsuarioDTO> Put(int id, AlterarUsuarioDTO data);
         Task<bool> Delete(int id);
+
     }
 }

@@ -1,13 +1,11 @@
-﻿using Domain.Interfaces.Redis;
+﻿using Data.Interfaces.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Services.Redis
+namespace Data.Redis
 {
     public class RedisIntegrator : IRedisIntegrator
     {

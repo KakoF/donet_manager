@@ -1,13 +1,8 @@
-﻿using Domain.Interfaces.Redis;
+﻿using Data.Interfaces.Redis;
+using Data.Redis;
 using Domain.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Services;
-using Service.Services.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DI.DependencyInjection
 {
