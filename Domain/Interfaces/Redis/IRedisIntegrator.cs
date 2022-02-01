@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Redis
 {
+    //Não faz sentido o Domínio saber que há dados em Redis, Sql ou qualquer tecnologia que seja.
     public interface IRedisIntegrator
     {
         Task<T> GetAsync<T>(string key);

@@ -23,6 +23,8 @@ namespace API.Controllers
         [HttpGet, Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDTO>))]
         public async Task<ActionResult<ListSuccessResponse<UsuarioDTO>>> Get()
         {
+            //Evitar usar try catch nos controllers, as exceções devem ser tratadas se algo específico for necessário. Neste caso, vc pode usar um tratamento no startup da aplicação para que retorne badrequest em caso de erro não tratado;
+
             try
             {
                 var result = await _service.Get();
