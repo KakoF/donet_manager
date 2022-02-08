@@ -36,8 +36,8 @@ namespace API.Helpers.Middleware
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if      (exception is Exception)     code = HttpStatusCode.NotFound;
-           
+            if (exception is Exception) code = HttpStatusCode.NotFound;
+
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
@@ -52,5 +52,5 @@ namespace API.Helpers.Middleware
             return context.Response.WriteAsync(result);
         }
     }
-    
+
 }
