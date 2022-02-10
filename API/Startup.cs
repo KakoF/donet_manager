@@ -22,23 +22,33 @@ namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment _environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            if (_environment.IsEnvironment("Testing"))
+            {
+                Environment.SetEnvironmentVariable("sqlServer", "Server=127.0.0.1,1433;Database=master;User Id=sa;Password=Manager010203!@#;TrustServerCertificate=true;");
+                Environment.SetEnvironmentVariable("redis", "127.0.0.1:6379,password=Manager010203!@#");
+                Environment.SetEnvironmentVariable("redisName", "managerRedis");
+            }
+
             services.AddDistributedRedisCache(options =>
             {
-                options.Configuration = Configuration.GetConnectionString("redis");
-                options.InstanceName = Configuration["redisName"];
+                options.Configuration = _environment.IsEnvironment("Testing") ? Environment.GetEnvironmentVariable("redis") : Configuration.GetConnectionString("redis");
+                options.InstanceName = _environment.IsEnvironment("Testing") ? Environment.GetEnvironmentVariable("redisName") : Configuration["redisName"];
 
             });
-            services.AddScoped<IDbConnector>(db => new SqlServerConnector(Configuration.GetConnectionString("sqlServer")));
+            services.AddScoped<IDbConnector>(db => new SqlServerConnector(_environment.IsEnvironment("Testing") ? Environment.GetEnvironmentVariable("sqlServer") : Configuration.GetConnectionString("sqlServer")));
             ConfigureService.ConfigureDependenciesService(services);
             ConfigureRepository.ConfigureDependenciesRepository(services);
             services.AddControllers(options => options.Filters.Add<ValidationMiddleware>())
