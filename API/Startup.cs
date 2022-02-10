@@ -37,7 +37,7 @@ namespace API
 
             if (_environment.IsEnvironment("Testing"))
             {
-                Environment.SetEnvironmentVariable("sqlServer", "Server=127.0.0.1,1433;Database=master;User Id=sa;Password=Manager010203!@#;TrustServerCertificate=true;");
+                Environment.SetEnvironmentVariable("sqlServer", "Server=127.0.0.1,1433;Database=master_integration_test;User Id=sa;Password=Manager010203!@#;TrustServerCertificate=true;");
                 Environment.SetEnvironmentVariable("redis", "127.0.0.1:6379,password=Manager010203!@#");
                 Environment.SetEnvironmentVariable("redisName", "managerRedis");
             }
