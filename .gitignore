@@ -115,6 +115,8 @@ _TeamCity*
 *.dotCover
 
 # Visual Studio code coverage results
+/sonarqubecoverage
+.sonarqube/
 *.coverage
 *.coveragexml
 
