@@ -40,6 +40,7 @@ namespace API.Controllers
         public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Post([FromBody] CriarUsuarioDTO usuario)
         {
             var result = await _service.Post(usuario);
+            Response.StatusCode = (int)HttpStatusCode.Created;
             return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.Created, result, "Usuário cadastrado");
         }
 
