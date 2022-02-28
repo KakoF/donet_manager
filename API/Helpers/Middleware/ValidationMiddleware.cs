@@ -14,7 +14,7 @@ namespace API.Helpers.Middleware
             if (!context.ModelState.IsValid)
             {
                 var jsonModelValidate = context.ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage).ToList();
-                context.Result = new BadRequestObjectResult(new DomainException("Alguns campos estão inválidos!", jsonModelValidate, (int)HttpStatusCode.BadRequest));
+                context.Result = new BadRequestObjectResult(new ErrorResponse((int)HttpStatusCode.BadRequest, "Alguns campos estão inválidos!", jsonModelValidate));
                 return;
             }
             await next();
