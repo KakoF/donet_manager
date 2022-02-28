@@ -8,6 +8,8 @@ using Domain.DTO.Usuario;
 using Data.Interfaces.DataConnector;
 using Data.Interfaces.Redis;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Services.UnitTests
 {
@@ -34,19 +36,44 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_SearchExistingUser_ShouldReturnPayload()
+        public async void When_GetPassingId_ShouldReturnUser()
         {
             //Arr
             int id = It.IsAny<int>();
-            _mockUsuarioRepoisitory.Setup(c => c.Get(id)).ReturnsAsync(new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null));
+            Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
+            _mockUsuarioRepoisitory.Setup(c => c.Get(id)).ReturnsAsync(entity);
 
             //Act
             var result = await _sut.Get(id);
 
             //Assert
             _mockUsuarioRepoisitory.Verify(c => c.Get(id), Times.Once);
+
             Assert.Equal(result.Id, id);
+            Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(entity)));
+
         }
+
+
+        [Fact]
+        public async void When_Get_ShouldReturnUserList()
+        {
+            //Arr
+            var entitys = new List<Usuario>()
+            {
+                new Usuario(1, "Marcos", "marcosferrare@gmail.com", DateTime.Now, null),
+                new Usuario(2, "Kako", "kakoferrare@gmail.com", DateTime.Now, null),
+            };
+            _mockUsuarioRepoisitory.Setup(c => c.Get()).ReturnsAsync(entitys);
+
+            //Act
+            var result = await _sut.Get();
+
+            //Assert
+            _mockUsuarioRepoisitory.Verify(c => c.Get(), Times.Once);
+            Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDTO>>(entitys).Count);
+        }
+
 
         private void InitializedMapper()
         {
