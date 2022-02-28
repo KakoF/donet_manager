@@ -5,16 +5,22 @@ using Domain.Entities;
 using Service.Services;
 using AutoMapper;
 using Domain.DTO.Usuario;
+using Data.Interfaces.DataConnector;
+using Data.Interfaces.Redis;
+using System;
 
 namespace Services.UnitTests
 {
     public class UsuarioServiceTests
     {
+        private readonly UsuarioService _sut;
+
+
         private readonly MockRepository _mockRepository;
-
         private readonly Mock<IUsuarioRepository> _mockUsuarioRepoisitory;
-
-        private readonly UsuarioService _usuarioService;
+        Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+        Mock<IRedisIntegrator> _mockRedisIntegrator = new Mock<IRedisIntegrator>();
+        
         IMapper _mapper;
 
         public UsuarioServiceTests()
@@ -22,30 +28,24 @@ namespace Services.UnitTests
             InitializedMapper();
 
             _mockRepository = new MockRepository(MockBehavior.Loose);
-
             _mockUsuarioRepoisitory = _mockRepository.Create<IUsuarioRepository>();
-        
-            _usuarioService = new UsuarioService(_mockUsuarioRepoisitory.Object, _mapper, null, null);
+            _sut = new UsuarioService(_mockUsuarioRepoisitory.Object, _mapper, _mockUnitOfWork.Object, _mockRedisIntegrator.Object);
+
         }
 
         [Fact]
         public async void When_SearchExistingUser_ShouldReturnPayload()
         {
             //Arr
-            _mockUsuarioRepoisitory.Setup(c => c.Get(It.IsAny<int>()))
-                .ReturnsAsync(new Usuario());
+            int id = It.IsAny<int>();
+            _mockUsuarioRepoisitory.Setup(c => c.Get(id)).ReturnsAsync(new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null));
 
             //Act
-            var result = await _usuarioService.Get(1);
+            var result = await _sut.Get(id);
 
             //Assert
-            Assert.NotNull(result);
-
-            //Testa se todos os repositório configurados no teste foram invovados, no exemplo só será invocado o repositório de usuário
-            _mockRepository.VerifyAll();
-
-            //Testa se o método Get foi invocado somente uma vez
-            _mockUsuarioRepoisitory.Verify(c => c.Get(It.IsAny<int>()), Times.Once);
+            _mockUsuarioRepoisitory.Verify(c => c.Get(id), Times.Once);
+            Assert.Equal(result.Id, id);
         }
 
         private void InitializedMapper()
