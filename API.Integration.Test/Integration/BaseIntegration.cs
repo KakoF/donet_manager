@@ -32,6 +32,22 @@ namespace API.Integration.Test.Integration
             return await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(dataClass), System.Text.Encoding.UTF8, "application/json"));
         }
 
+        public static async Task<HttpResponseMessage> PutJsonAsync(object dataClass, string url, HttpClient client)
+        {
+            return await client.PutAsync(url, new StringContent(JsonConvert.SerializeObject(dataClass), System.Text.Encoding.UTF8, "application/json"));
+        }
+
+        public static async Task<HttpResponseMessage> GetAsync(string url, HttpClient client)
+        {
+            return await client.GetAsync(url);
+        }
+
+        public static async Task<HttpResponseMessage> DeleteAsync(string url, HttpClient client)
+        {
+            return await client.DeleteAsync(url);
+        }
+
+
         public void Dispose()
         {
             client.Dispose();
