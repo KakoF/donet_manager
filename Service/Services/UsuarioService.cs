@@ -29,7 +29,7 @@ namespace Service.Services
 
         public async Task<bool> Delete(int id)
         {
-            await Find(id);
+            //await Find(id);
             var delete = await _repository.Delete(id);
             return delete;
 
@@ -37,21 +37,21 @@ namespace Service.Services
 
         public async Task<UsuarioDTO> Get(int id)
         {
-            var entity = await Find(id);
-            return _mapper.Map<UsuarioDTO>(entity);
+            UsuarioDTO usuarioCache = await _cache.GetAsync<UsuarioDTO>($"Usuario_{id}");
+            if (usuarioCache == null)
+            {
+                var entity = await Find(id);
+                var usuario = _mapper.Map<UsuarioDTO>(entity);
+                _cache.Set($"Usuario_{id}", usuario);
+                return usuario;
+            }
+            return _mapper.Map<UsuarioDTO>(usuarioCache);
         }
 
         public async Task<IEnumerable<UsuarioDTO>> Get()
         {
-            IEnumerable<UsuarioDTO> usuariosCache = await _cache.GetListAsync<UsuarioDTO>("Usuarios");
-            if (usuariosCache == null)
-            {
-                var list = await _repository.Get();
-                _cache.SetList("Usuarios", list);
-                return _mapper.Map<IEnumerable<UsuarioDTO>>(list);
-            }
-
-            return _mapper.Map<IEnumerable<UsuarioDTO>>(usuariosCache);
+            var list = await _repository.Get();
+            return _mapper.Map<IEnumerable<UsuarioDTO>>(list);
         }
 
         public async Task<UsuarioDTO> Post(CriarUsuarioDTO data)
@@ -60,29 +60,29 @@ namespace Service.Services
             model.Validate();
             var entity = _mapper.Map<Usuario>(model);
             var result = await _repository.Post(entity);
-            _cache.Remove("Usuarios");
             _unitOfWork.CommitTransaction();
+            _cache.Remove($"Usuario_{result.Id}");
             return _mapper.Map<UsuarioDTO>(result);
         }
 
         public async Task<UsuarioDTO> Put(int id, AlterarUsuarioDTO data)
         {
             var entity = await Find(id);
+            if(entity == null)
+                return null;
+
             var model = _mapper.Map<UsuarioModel>(entity);
             model.Validate();
             _mapper.Map(data, model);
             _mapper.Map(model, entity);
             var result = await _repository.Put(id, entity);
-            _cache.Remove("Usuarios");
+            _cache.Remove($"Usuario_{id}");
             return _mapper.Map<UsuarioDTO>(result);
         }
 
-        // Fazer um método genério para que verifique e retorne se a entidade<T> existe, caso não estoure exception
         private async Task<Usuario> Find(int id)
         {
             var entity = _mapper.Map<Usuario>(await _repository.Get(id));
-            if (entity == null)
-                throw new DomainException("Registro não encontrado", 404);
             return entity;
         }
     }

@@ -10,7 +10,7 @@ namespace Domain.Entities
 
         public Usuario() { }
 
-        public Usuario(int id, string nome, string email, DateTime dataCriacao, DateTime dataAlteracao) : base(id, dataCriacao, dataAlteracao)
+        public Usuario(int id, string nome, string email, DateTime dataCriacao, DateTime? dataAlteracao) : base(id, dataCriacao, dataAlteracao)
         {
             Nome = nome;
             Email = email;
