@@ -6,11 +6,11 @@ namespace Domain.Interfaces.Services
 {
     public interface IUsuarioService
     {
-        Task<UsuarioDTO> Get(int id);
-        Task<IEnumerable<UsuarioDTO>> Get();
-        Task<UsuarioDTO> Post(CriarUsuarioDTO data);
-        Task<UsuarioDTO> Put(int id, AlterarUsuarioDTO data);
-        Task<bool> Delete(int id);
+        Task<UsuarioDTO> ReadAsync(int id);
+        Task<IEnumerable<UsuarioDTO>> ReadAsync();
+        Task<UsuarioDTO> CreateAsync(CriarUsuarioDTO data);
+        Task<UsuarioDTO> UpdateAsync(int id, AlterarUsuarioDTO data);
+        Task<bool> DeleteAsync(int id);
 
     }
 }

@@ -18,28 +18,28 @@ namespace Data.Repositories
             _dbConnector = dbConnector;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             string sql = " Delete FROM [dbo].[Usuario] Where Id = @Id";
             var delete = await _dbConnector.dbConnection.ExecuteAsync(sql, new { Id = id }, _dbConnector.dbTransaction);
             return Convert.ToBoolean(delete);
         }
 
-        public async Task<Usuario> Get(int id)
+        public async Task<Usuario> GetAsync(int id)
         {
             string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario] Where Id = @Id";
             var usuario = await _dbConnector.dbConnection.QueryFirstOrDefaultAsync<Usuario>(sql, new {Id = id}, _dbConnector.dbTransaction);
             return usuario;
         }
 
-        public async Task<IEnumerable<Usuario>> Get()
+        public async Task<IEnumerable<Usuario>> GetAsync()
         {
             string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario]";
             var usuarios = await _dbConnector.dbConnection.QueryAsync<Usuario>(sql, _dbConnector.dbTransaction);
             return usuarios.ToList();
         }
 
-        public async Task<Usuario> Post(Usuario data)
+        public async Task<Usuario> PostAsync(Usuario data)
         {
 
             string sql = @"INSERT INTO [dbo].[Usuario]
@@ -61,7 +61,7 @@ namespace Data.Repositories
             return data;
         }
 
-        public async Task<Usuario> Put(int id, Usuario usuario)
+        public async Task<Usuario> PutAsync(int id, Usuario usuario)
         {
             string sql = @"Update [dbo].[Usuario] Set
                                  Nome = @Nome

@@ -53,10 +53,10 @@ namespace Services.UnitTests
             _mockRedisIntegrator.Setup(c => c.GetAsync<UsuarioDTO>($"Usuario_{id}")).ReturnsAsync(usuarioDto);
 
             //Act
-            var result = await _sut.Get(id);
+            var result = await _sut.ReadAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Get(id), Times.Never);
+            _mockUsuarioRepository.Verify(c => c.GetAsync(id), Times.Never);
 
             Assert.Equal(result.Id, id);
             Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(usuarioDto)));
@@ -69,13 +69,13 @@ namespace Services.UnitTests
             //Arr
             int id = It.IsAny<int>();
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
-            _mockUsuarioRepository.Setup(c => c.Get(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
 
             //Act
-            var result = await _sut.Get(id);
+            var result = await _sut.ReadAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Get(id), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.GetAsync(id), Times.Once);
 
             Assert.Equal(result.Id, id);
             Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(entity)));
@@ -92,13 +92,13 @@ namespace Services.UnitTests
                 new Usuario(1, "Marcos", "marcosferrare@gmail.com", DateTime.Now, null),
                 new Usuario(2, "Kako", "kakoferrare@gmail.com", DateTime.Now, null),
             };
-            _mockUsuarioRepository.Setup(c => c.Get()).ReturnsAsync(entitys);
+            _mockUsuarioRepository.Setup(c => c.GetAsync()).ReturnsAsync(entitys);
 
             //Act
-            var result = await _sut.Get();
+            var result = await _sut.ReadAsync();
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Get(), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.GetAsync(), Times.Once);
             Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDTO>>(entitys).Count);
         }
 
@@ -107,13 +107,13 @@ namespace Services.UnitTests
         {
             //Arr
             int id = It.IsAny<int>();
-            _mockUsuarioRepository.Setup(c => c.Delete(id)).ReturnsAsync(true);
+            _mockUsuarioRepository.Setup(c => c.DeleteAsync(id)).ReturnsAsync(true);
 
             //Act
-            var result = await _sut.Delete(id);
+            var result = await _sut.DeleteAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Delete(id), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.DeleteAsync(id), Times.Once);
             Assert.True(result);
         }
 
@@ -122,13 +122,13 @@ namespace Services.UnitTests
         {
             //Arr
             int id = It.IsAny<int>();
-            _mockUsuarioRepository.Setup(c => c.Delete(id)).ReturnsAsync(false);
+            _mockUsuarioRepository.Setup(c => c.DeleteAsync(id)).ReturnsAsync(false);
 
             //Act
-            var result = await _sut.Delete(id);
+            var result = await _sut.DeleteAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Delete(id), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.DeleteAsync(id), Times.Once);
             Assert.False(result);
         }
 
@@ -142,7 +142,7 @@ namespace Services.UnitTests
             };
 
             //Act
-            var ex = Assert.ThrowsAsync<DomainException>(async () => await  _sut.Post(createModel));
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await  _sut.CreateAsync(createModel));
             
             //Assert
             Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
@@ -161,7 +161,7 @@ namespace Services.UnitTests
             };
 
             //Act
-            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.Post(createModel));
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.CreateAsync(createModel));
 
             //Assert
             Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
@@ -180,7 +180,7 @@ namespace Services.UnitTests
             };
 
             //Act
-            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.Post(createModel));
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.CreateAsync(createModel));
 
             //Assert
             Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
@@ -198,16 +198,16 @@ namespace Services.UnitTests
                 Email = "kakoferrare@gmail.com"
             };
 
-            Usuario entity = new Usuario(It.IsAny<int>(), "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
+            Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
 
-            _mockUsuarioRepository.Setup(c => c.Post(entity)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.PostAsync(entity)).ReturnsAsync(entity);
             _mockUnitOfWork.Setup(c => c.CommitTransaction());
 
             //Act
-            var result = await _sut.Post(createModel);
+            var result = await _sut.CreateAsync(createModel);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Post(entity), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.PostAsync(entity), Times.Once);
             Assert.NotNull(result);
 
         }
@@ -223,8 +223,8 @@ namespace Services.UnitTests
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
 
 
-            _mockUsuarioRepository.Setup(c => c.Get(id)).ReturnsAsync(entity);
-            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.Put(id, updateModel));
+            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.UpdateAsync(id, updateModel));
 
             //Assert
             Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
@@ -244,13 +244,13 @@ namespace Services.UnitTests
             int id = It.IsAny<int>();
             Usuario entity = null;
 
-            _mockUsuarioRepository.Setup(c => c.Get(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
 
             //Act
-            var result = await _sut.Put(id, updateModel);
+            var result = await _sut.UpdateAsync(id, updateModel);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Put(id, entity), Times.Never);
+            _mockUsuarioRepository.Verify(c => c.PutAsync(id, entity), Times.Never);
             Assert.Null(result);
 
         }
@@ -269,94 +269,18 @@ namespace Services.UnitTests
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, DateTime.Now);
 
           
-            _mockUsuarioRepository.Setup(c => c.Get(id)).ReturnsAsync(entity);
-            _mockUsuarioRepository.Setup(c => c.Put(id, entity)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.PutAsync(id, entity)).ReturnsAsync(entity);
             _mockUnitOfWork.Setup(c => c.CommitTransaction());
 
             //Act
-            var result = await _sut.Put(id, updateModel);
+            var result = await _sut.UpdateAsync(id, updateModel);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.Put(id, entity), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.PutAsync(id, entity), Times.Once);
             Assert.NotNull(result);
 
         }
-
-
-
-
-
-
-
-
-
-
-        /*[Fact]
-        public async void When_Post_ShouldCreateUserAndReturn()
-        {
-            //Arr
-            var createModel = new CriarUsuarioDTO()
-            {
-                Nome = "Kako",
-                Email = "kakoferrare@gmail.com"
-            };
-
-            var model = _mapper.Map<UsuarioModel>(new UsuarioModel()
-            {
-                Nome = createModel.Nome,
-                Email = createModel.Email,
-                DataCriacao = DateTime.Now,
-                DataAtualizacao = null
-            });
-
-            Usuario entity = new Usuario(It.IsAny<int>(), model.Nome, model.Email, model.DataCriacao, model.DataAtualizacao);
-
-            _mockUsuarioRepository.Setup(c => c.Post(entity)).ReturnsAsync(entity);
-            _mockUnitOfWork.Setup(c => c.CommitTransaction());
-
-            //Act
-            var result = await _sut.Post(createModel);
-
-            //Assert
-            _mockUsuarioRepository.Verify(c => c.Post(entity), Times.Once);
-            Assert.NotNull(result);
-
-        }
-
-
-
-        [Fact]
-        public async void When_Put_ShouldUpdateUserAndReturn()
-        {
-
-            var updateModel = new AlterarUsuarioDTO()
-            {
-                Nome = "Kako",
-            };
-
-            int id = It.IsAny<int>();
-            Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
-
-            var model = _mapper.Map<UsuarioModel>(new UsuarioModel() { 
-                Nome = updateModel.Nome,
-                Email = entity.Email,
-                DataCriacao = entity.DataCriacao,
-                DataAtualizacao = DateTime.Now
-            });
-            var modelEntity = _mapper.Map<Usuario>(model);
-
-            _mockUsuarioRepository.Setup(c => c.Get(id)).ReturnsAsync(entity);
-            _mockUsuarioRepository.Setup(c => c.Put(id, modelEntity)).ReturnsAsync(entity);
-            _mockUnitOfWork.Setup(c => c.CommitTransaction());
-
-            //Act
-            var result = await _sut.Put(id, updateModel);
-
-            //Assert
-            _mockUsuarioRepository.Verify(c => c.Put(id, entity), Times.Once);
-            Assert.NotNull(result);
-
-        }*/
 
 
         private void InitializedMapper()

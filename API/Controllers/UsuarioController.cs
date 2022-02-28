@@ -24,7 +24,7 @@ namespace API.Controllers
         [HttpGet, Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDTO>))]
         public async Task<ActionResult<ListSuccessResponse<UsuarioDTO>>> Get()
         {
-            var result = await _service.Get();
+            var result = await _service.ReadAsync();
             return new ListSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado");
         }
 
@@ -32,14 +32,14 @@ namespace API.Controllers
         [Route("{id}", Name = "GetWithId")]
         public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Get(int id)
         {
-            var result = await _service.Get(id);
+            var result = await _service.ReadAsync(id);
             return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result == null ? "Usuário não encontrado" : "Usuário encontrado");
         }
 
         [HttpPost]
         public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Post([FromBody] CriarUsuarioDTO usuario)
         {
-            var result = await _service.Post(usuario);
+            var result = await _service.CreateAsync(usuario);
             Response.StatusCode = (int)HttpStatusCode.Created;
             return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.Created, result, "Usuário cadastrado");
         }
@@ -48,7 +48,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
         {
-            var result = await _service.Put(id, usuario);
+            var result = await _service.UpdateAsync(id, usuario);
             return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário alterado");
         }
 
@@ -56,7 +56,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<ActionResult<Response>> Delete(int id)
         {
-            var result = await _service.Delete(id);
+            var result = await _service.DeleteAsync(id);
             return new Response((int)HttpStatusCode.OK, "Usuário excluído");
         }
     }
