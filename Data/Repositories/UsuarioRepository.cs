@@ -61,21 +61,20 @@ namespace Data.Repositories
             return data;
         }
 
-        public async Task<Usuario> Put(int id, Usuario data)
+        public async Task<Usuario> Put(int id, Usuario usuario)
         {
             string sql = @"Update [dbo].[Usuario] Set
                                  Nome = @Nome
                                  ,Email = @Email
                                  ,DataAtualizacao = @DataAtualizacao Where Id = @Id";
 
-            var usuario = await _dbConnector.dbConnection.QueryFirstOrDefaultAsync<Usuario>(sql, new
+            await _dbConnector.dbConnection.ExecuteAsync(sql, new
             {
-                Id = data.Id,
-                Nome = data.Nome,
-                Email = data.Email,
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
                 DataAtualizacao = DateTime.Now,
             }, _dbConnector.dbTransaction);
-
             return usuario;
         }
         

@@ -11,5 +11,9 @@
             UsuarioDTO usuarioDto = (UsuarioDTO)obj;
             return Id.Equals(usuarioDto.Id) && Nome.Equals(usuarioDto.Nome) && Email.Equals(usuarioDto.Email);
         }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace API.Controllers
         public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Get(int id)
         {
             var result = await _service.Get(id);
-            return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário encontrado");
+            return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result == null ? "Usuário não encontrado" : "Usuário encontrado");
         }
 
         [HttpPost]
