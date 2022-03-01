@@ -61,7 +61,7 @@ namespace Data.Repositories
             return data;
         }
 
-        public async Task<Usuario> UpdateAsync(int id, Usuario usuario)
+        public async Task<Usuario> UpdateAsync(int id, Usuario data)
         {
             string sql = @"Update [dbo].[Usuario] Set
                                  Nome = @Nome
@@ -70,12 +70,12 @@ namespace Data.Repositories
 
             await _dbConnector.dbConnection.ExecuteAsync(sql, new
             {
-                Id = usuario.Id,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
+                Id = data.Id,
+                Nome = data.Nome,
+                Email = data.Email,
                 DataAtualizacao = DateTime.Now,
             }, _dbConnector.dbTransaction);
-            return usuario;
+            return data;
         }
         
 
