@@ -43,6 +43,8 @@ jobs:
         shell: pwsh
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet test Services.UnitTests/Services.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
           dotnet build
+           # Running unit tests - 'opencover ' output format
+           dotnet test Services.UnitTests/Services.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]* ./Manager.sln
+           mv ./Services.UnitTests/coverage.opencover.xml opencover.xml 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
