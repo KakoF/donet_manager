@@ -21,35 +21,35 @@ namespace API.Controllers
             _service = service;
         }
 
-        [HttpGet, Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDTO>))]
-        public async Task<ActionResult<ListSuccessResponse<UsuarioDTO>>> Get()
+        [HttpGet, Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDto>))]
+        public async Task<ActionResult<ListSuccessResponse<UsuarioDto>>> Get()
         {
             var result = await _service.ReadAsync();
-            return new ListSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result.Count() > 0 ? "Usuários encontrados" : "Nenhum usuário encontrado");
+            return new ListSuccessResponse<UsuarioDto>((int)HttpStatusCode.OK, result, result.Any() ? "Usuários encontrados" : "Nenhum usuário encontrado");
         }
 
         [HttpGet]
         [Route("{id}", Name = "GetWithId")]
-        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Get(int id)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDto>>> Get(int id)
         {
             var result = await _service.ReadAsync(id);
-            return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, result == null ? "Usuário não encontrado" : "Usuário encontrado");
+            return new DataSuccessResponse<UsuarioDto>((int)HttpStatusCode.OK, result, result == null ? "Usuário não encontrado" : "Usuário encontrado");
         }
 
         [HttpPost]
-        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Post([FromBody] CriarUsuarioDTO usuario)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDto>>> Post([FromBody] CriarUsuarioDto usuario)
         {
             var result = await _service.CreateAsync(usuario);
             Response.StatusCode = (int)HttpStatusCode.Created;
-            return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.Created, result, "Usuário cadastrado");
+            return new DataSuccessResponse<UsuarioDto>((int)HttpStatusCode.Created, result, "Usuário cadastrado");
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult<DataSuccessResponse<UsuarioDTO>>> Put(int id, [FromBody] AlterarUsuarioDTO usuario)
+        public async Task<ActionResult<DataSuccessResponse<UsuarioDto>>> Put(int id, [FromBody] AlterarUsuarioDto usuario)
         {
             var result = await _service.UpdateAsync(id, usuario);
-            return new DataSuccessResponse<UsuarioDTO>((int)HttpStatusCode.OK, result, "Usuário alterado");
+            return new DataSuccessResponse<UsuarioDto>((int)HttpStatusCode.OK, result, "Usuário alterado");
         }
 
         [HttpDelete]

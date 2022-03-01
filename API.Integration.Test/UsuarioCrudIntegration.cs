@@ -27,11 +27,11 @@ namespace API.Integration.Test
             var response = new HttpResponseMessage();
             var result = "";
 
-            var usuarioDto = new CriarUsuarioDTO() { Nome = _nome, Email = _email };
-            response = await PostJsonAsync(usuarioDto, $"{hostApi}usuario", client);
+            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email };
+            response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
             result = await response.Content.ReadAsStringAsync();
 
-            var postResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDTO>>(result);
+            var postResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDto>>(result);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(_nome, postResponse.Data.Nome);
             Assert.Equal(_email, postResponse.Data.Email);
@@ -39,7 +39,7 @@ namespace API.Integration.Test
 
             response = await GetAsync($"{hostApi}usuario", client);
             result = await response.Content.ReadAsStringAsync();
-            var getListResponse = JsonConvert.DeserializeObject<DataSuccessResponse<List<UsuarioDTO>>>(result);
+            var getListResponse = JsonConvert.DeserializeObject<DataSuccessResponse<List<UsuarioDto>>>(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(getListResponse.Data);
 
@@ -47,16 +47,16 @@ namespace API.Integration.Test
             var id = postResponse.Data.Id;
             response = await GetAsync($"{hostApi}usuario/{id}", client);
             result = await response.Content.ReadAsStringAsync();
-            var getResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDTO>>(result);
+            var getResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDto>>(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(getResponse.Data);
 
 
-            var usuarioAlterarDto = new AlterarUsuarioDTO() { Nome = _nome,};
+            var usuarioAlterarDto = new AlterarUsuarioDto() { Nome = _nome,};
             response = await PutJsonAsync(usuarioAlterarDto, $"{hostApi}usuario/{id}", client);
             result = await response.Content.ReadAsStringAsync();
 
-            var putResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDTO>>(result);
+            var putResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDto>>(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(_nome, putResponse.Data.Nome);
             Assert.Equal(_email, putResponse.Data.Email);

@@ -1,6 +1,6 @@
 ﻿namespace Domain.DTO.Usuario
 {
-    public class UsuarioDTO
+    public class UsuarioDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -8,8 +8,8 @@
 
         public override bool Equals(object obj)
         {
-            UsuarioDTO usuarioDto = (UsuarioDTO)obj;
-            return Id.Equals(usuarioDto.Id) && Nome.Equals(usuarioDto.Nome) && Email.Equals(usuarioDto.Email);
+            UsuarioDto UsuarioDto = (UsuarioDto)obj;
+            return Id.Equals(UsuarioDto.Id) && Nome.Equals(UsuarioDto.Nome) && Email.Equals(UsuarioDto.Email);
         }
         public override int GetHashCode()
         {

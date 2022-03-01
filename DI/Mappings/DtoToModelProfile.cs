@@ -8,9 +8,9 @@ namespace DI.Mappings
     {
         public DtoToModelProfile()
         {
-            CreateMap<UsuarioDTO, UsuarioModel>().ReverseMap();
-            CreateMap<CriarUsuarioDTO, UsuarioModel>().ReverseMap();
-            CreateMap<AlterarUsuarioDTO, UsuarioModel>().ReverseMap();
+            CreateMap<UsuarioDto, UsuarioModel>().ReverseMap();
+            CreateMap<CriarUsuarioDto, UsuarioModel>().ReverseMap();
+            CreateMap<AlterarUsuarioDto, UsuarioModel>().ReverseMap();
         }
     }
 }

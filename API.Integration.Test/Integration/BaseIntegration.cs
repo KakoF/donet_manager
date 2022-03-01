@@ -61,7 +61,7 @@ namespace API.Integration.Test.Integration
             throw new NotImplementedException();
         }
 
-        public static IMapper GetMapper()
+        public IMapper GetMapper()
         {
             var config = new MapperConfiguration(cfg =>
             {

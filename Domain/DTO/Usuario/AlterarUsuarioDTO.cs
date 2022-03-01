@@ -2,7 +2,7 @@
 
 namespace Domain.DTO.Usuario
 {
-    public class AlterarUsuarioDTO
+    public class AlterarUsuarioDto
     {
         [Required(ErrorMessage = "Nome é campo obrigatório.")]
         [StringLength(60, ErrorMessage = "Nome deve ter no máximo {1} caracteres.")]

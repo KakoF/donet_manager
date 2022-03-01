@@ -44,13 +44,13 @@ namespace Services.UnitTests
         {
             //Arr
             int id = It.IsAny<int>();
-            UsuarioDTO usuarioDto = new UsuarioDTO() 
+            UsuarioDto UsuarioDto = new UsuarioDto() 
             { 
                 Id = id, 
                 Nome = "Marcos", 
                 Email= "kakoferrare@gmail.com" 
             };
-            _mockRedisIntegrator.Setup(c => c.GetAsync<UsuarioDTO>($"Usuario_{id}")).ReturnsAsync(usuarioDto);
+            _mockRedisIntegrator.Setup(c => c.GetAsync<UsuarioDto>($"Usuario_{id}")).ReturnsAsync(UsuarioDto);
 
             //Act
             var result = await _sut.ReadAsync(id);
@@ -59,7 +59,7 @@ namespace Services.UnitTests
             _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Never);
 
             Assert.Equal(result.Id, id);
-            Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(usuarioDto)));
+            Assert.True(result.Equals(_mapper.Map<UsuarioDto>(UsuarioDto)));
 
         }
 
@@ -78,7 +78,7 @@ namespace Services.UnitTests
             _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Once);
 
             Assert.Equal(result.Id, id);
-            Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(entity)));
+            Assert.True(result.Equals(_mapper.Map<UsuarioDto>(entity)));
 
         }
 
@@ -99,7 +99,7 @@ namespace Services.UnitTests
 
             //Assert
             _mockUsuarioRepository.Verify(c => c.ReadAsync(), Times.Once);
-            Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDTO>>(entitys).Count);
+            Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDto>>(entitys).Count);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace Services.UnitTests
         public void CreateAsync_EmptyStringNome_ReturnDomainException()
         {
             //Arr
-            var createModel = new CriarUsuarioDTO()
+            var createModel = new CriarUsuarioDto()
             {
                 Email = "kakoferrare@gmail.com"
             };
@@ -155,7 +155,7 @@ namespace Services.UnitTests
         public void CreateAsync_EmptyStringEmail_ReturnDomainException()
         {
             //Arr
-            var createModel = new CriarUsuarioDTO()
+            var createModel = new CriarUsuarioDto()
             {
                 Nome = "Kako"
             };
@@ -173,7 +173,7 @@ namespace Services.UnitTests
         public void CreateAsync_InvalidStringEmail_ReturnDomainException()
         {
             //Arr
-            var createModel = new CriarUsuarioDTO()
+            var createModel = new CriarUsuarioDto()
             {
                 Nome = "Kako",
                  Email = "kakoferraregmail.com"
@@ -193,7 +193,7 @@ namespace Services.UnitTests
         {
             //Arr
             Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
-            var create = new CriarUsuarioDTO()
+            var create = new CriarUsuarioDto()
             {
                 Nome = "Marcos",
                 Email ="kakoferrare@gmail.com"
@@ -216,7 +216,7 @@ namespace Services.UnitTests
         public void UpdateAsync_EmptyStringNome_ReturnDomainException()
         {
             //Arr
-            var updateModel = new AlterarUsuarioDTO();
+            var updateModel = new AlterarUsuarioDto();
 
             int id = It.IsAny<int>();
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
@@ -235,7 +235,7 @@ namespace Services.UnitTests
         public async void UpdateAsync_InvalidId_ReturnNull()
         {
             //Arr
-            var updateModel = new AlterarUsuarioDTO()
+            var updateModel = new AlterarUsuarioDto()
             {
                 Nome = "Kako",
             };
@@ -259,7 +259,7 @@ namespace Services.UnitTests
         public async void UpdateAsync_UserDtoAccepted_ReturnUserDto()
         {
             //Arr
-            var updateModel = new AlterarUsuarioDTO()
+            var updateModel = new AlterarUsuarioDto()
             {
                 Nome = "Kako",
             };
@@ -285,12 +285,12 @@ namespace Services.UnitTests
         private void InitializedMapper()
         {
             var config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<UsuarioDTO, UsuarioModel>().ReverseMap();
-                cfg.CreateMap<CriarUsuarioDTO, UsuarioModel>().ReverseMap();
-                cfg.CreateMap<AlterarUsuarioDTO, UsuarioModel>().ReverseMap();
-                cfg.CreateMap<UsuarioDTO, Usuario>().ReverseMap();
-                cfg.CreateMap<CriarUsuarioDTO, Usuario>().ReverseMap();
-                cfg.CreateMap<AlterarUsuarioDTO, Usuario>().ReverseMap();
+                cfg.CreateMap<UsuarioDto, UsuarioModel>().ReverseMap();
+                cfg.CreateMap<CriarUsuarioDto, UsuarioModel>().ReverseMap();
+                cfg.CreateMap<AlterarUsuarioDto, UsuarioModel>().ReverseMap();
+                cfg.CreateMap<UsuarioDto, Usuario>().ReverseMap();
+                cfg.CreateMap<CriarUsuarioDto, Usuario>().ReverseMap();
+                cfg.CreateMap<AlterarUsuarioDto, Usuario>().ReverseMap();
                 cfg.CreateMap<Usuario, UsuarioModel>().ReverseMap();
 
 

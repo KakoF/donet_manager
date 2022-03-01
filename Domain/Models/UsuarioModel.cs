@@ -6,19 +6,8 @@ namespace Domain.Models
 {
     public class UsuarioModel : BaseModel
     {
-        private string _nome;
-        public string Nome
-        {
-            get { return _nome; }
-            set { _nome = value; }
-        }
-
-        private string _email;
-        public string Email
-        {
-            get { return _email; }
-            set { _email = value; }
-        }
+        public string Nome { get; set; }
+        public string Email { get; set; }
 
         public UsuarioModel()
         {

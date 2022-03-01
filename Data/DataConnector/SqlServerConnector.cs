@@ -1,4 +1,5 @@
 ﻿using Data.Interfaces.DataConnector;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -35,6 +36,7 @@ namespace Data.DataConnector
         {
             dbConnection?.Dispose();
             dbTransaction?.Dispose();
+            GC.SuppressFinalize(true);
         }
     }
 }
