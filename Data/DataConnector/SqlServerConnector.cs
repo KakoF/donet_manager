@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Data.DataConnector
 {
-    public class SqlServerConnector : IDbConnector
+    public class SqlServerConnector : IDbConnector, IDisposable
     {
         public SqlServerConnector(string connectionString)
         {

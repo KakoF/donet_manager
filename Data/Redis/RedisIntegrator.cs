@@ -9,7 +9,7 @@ namespace Data.Redis
 {
     public class RedisIntegrator : IRedisIntegrator
     {
-        IDistributedCache _redisCache;
+        private readonly IDistributedCache _redisCache;
         public RedisIntegrator(IDistributedCache distributedCache)
         {
             _redisCache = distributedCache;

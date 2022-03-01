@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Domain.Exceptions
 {
-    public class DomainException : Exception
+    [Serializable]
+    public class DomainException : Exception, ISerializable
     {
         internal List<string> _errors;
 
