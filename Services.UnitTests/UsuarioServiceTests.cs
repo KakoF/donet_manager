@@ -40,7 +40,7 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_GetPassingId_ShouldReturnCachedUser()
+        public async void GetAsync_ValidId_ReturnCachedUser()
         {
             //Arr
             int id = It.IsAny<int>();
@@ -56,7 +56,7 @@ namespace Services.UnitTests
             var result = await _sut.ReadAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.GetAsync(id), Times.Never);
+            _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Never);
 
             Assert.Equal(result.Id, id);
             Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(usuarioDto)));
@@ -64,18 +64,18 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_GetPassingId_ShouldReturnUser()
+        public async void GetAsync_ValidId_ReturnUser()
         {
             //Arr
             int id = It.IsAny<int>();
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
-            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
 
             //Act
             var result = await _sut.ReadAsync(id);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.GetAsync(id), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Once);
 
             Assert.Equal(result.Id, id);
             Assert.True(result.Equals(_mapper.Map<UsuarioDTO>(entity)));
@@ -84,7 +84,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public async void When_Get_ShouldReturnUserList()
+        public async void GetAsync_ReturnListUsers()
         {
             //Arr
             var entitys = new List<Usuario>()
@@ -92,18 +92,18 @@ namespace Services.UnitTests
                 new Usuario(1, "Marcos", "marcosferrare@gmail.com", DateTime.Now, null),
                 new Usuario(2, "Kako", "kakoferrare@gmail.com", DateTime.Now, null),
             };
-            _mockUsuarioRepository.Setup(c => c.GetAsync()).ReturnsAsync(entitys);
+            _mockUsuarioRepository.Setup(c => c.ReadAsync()).ReturnsAsync(entitys);
 
             //Act
             var result = await _sut.ReadAsync();
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.GetAsync(), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.ReadAsync(), Times.Once);
             Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDTO>>(entitys).Count);
         }
 
         [Fact]
-        public async void When_Delete_ShouldDeleteUserWhenIdValidAndReturnTrue()
+        public async void DeleteAsync_ValidId_ReturnTrue()
         {
             //Arr
             int id = It.IsAny<int>();
@@ -118,7 +118,7 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_Delete_ShouldNotDeleteUserWhenIdInvalidAndReturnFalse()
+        public async void DeleteAsync_InvalidId_ReturnFalse()
         {
             //Arr
             int id = It.IsAny<int>();
@@ -133,7 +133,7 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public void When_PostWhitoutName_ShouldReturnError()
+        public void CreateAsync_EmptyStringNome_ReturnDomainException()
         {
             //Arr
             var createModel = new CriarUsuarioDTO()
@@ -152,7 +152,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public void When_PostWhitoutEmail_ShouldReturnError()
+        public void CreateAsync_EmptyStringEmail_ReturnDomainException()
         {
             //Arr
             var createModel = new CriarUsuarioDTO()
@@ -170,7 +170,7 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public void When_PostWhitInvalidEmail_ShouldReturnError()
+        public void CreateAsync_InvalidStringEmail_ReturnDomainException()
         {
             //Arr
             var createModel = new CriarUsuarioDTO()
@@ -189,32 +189,31 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_Post_ShouldCreateUserAndReturn()
+        public async void CreateAsync_UserDtoAccepted_ReturnUserDto()
         {
             //Arr
-            var createModel = new CriarUsuarioDTO()
+            Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
+            var create = new CriarUsuarioDTO()
             {
-                Nome = "Kako",
-                Email = "kakoferrare@gmail.com"
+                Nome = "Marcos",
+                Email ="kakoferrare@gmail.com"
             };
 
-            Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
-
-            _mockUsuarioRepository.Setup(c => c.PostAsync(entity)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.CreateAsync(It.IsAny<Usuario>())).ReturnsAsync(entity);
             _mockUnitOfWork.Setup(c => c.CommitTransaction());
 
             //Act
-            var result = await _sut.CreateAsync(createModel);
+            var result = await _sut.CreateAsync(create);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.PostAsync(entity), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.CreateAsync(It.IsAny<Usuario>()), Times.Once);
             Assert.NotNull(result);
 
         }
 
 
         [Fact]
-        public void When_PutWhitoutName_ShouldReturnError()
+        public void UpdateAsync_EmptyStringNome_ReturnDomainException()
         {
             //Arr
             var updateModel = new AlterarUsuarioDTO();
@@ -223,7 +222,7 @@ namespace Services.UnitTests
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, null);
 
 
-            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
             var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.UpdateAsync(id, updateModel));
 
             //Assert
@@ -233,7 +232,7 @@ namespace Services.UnitTests
         }
 
         [Fact]
-        public async void When_PutIdNotFound_ShouldReturnNull()
+        public async void UpdateAsync_InvalidId_ReturnNull()
         {
             //Arr
             var updateModel = new AlterarUsuarioDTO()
@@ -244,20 +243,20 @@ namespace Services.UnitTests
             int id = It.IsAny<int>();
             Usuario entity = null;
 
-            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
 
             //Act
             var result = await _sut.UpdateAsync(id, updateModel);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.PutAsync(id, entity), Times.Never);
+            _mockUsuarioRepository.Verify(c => c.UpdateAsync(id, entity), Times.Never);
             Assert.Null(result);
 
         }
 
 
         [Fact]
-        public async void When_Put_ShouldUpdateUserAndReturn()
+        public async void UpdateAsync_UserDtoAccepted_ReturnUserDto()
         {
             //Arr
             var updateModel = new AlterarUsuarioDTO()
@@ -269,15 +268,15 @@ namespace Services.UnitTests
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", DateTime.Now, DateTime.Now);
 
           
-            _mockUsuarioRepository.Setup(c => c.GetAsync(id)).ReturnsAsync(entity);
-            _mockUsuarioRepository.Setup(c => c.PutAsync(id, entity)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
+            _mockUsuarioRepository.Setup(c => c.UpdateAsync(id, entity)).ReturnsAsync(entity);
             _mockUnitOfWork.Setup(c => c.CommitTransaction());
 
             //Act
             var result = await _sut.UpdateAsync(id, updateModel);
 
             //Assert
-            _mockUsuarioRepository.Verify(c => c.PutAsync(id, entity), Times.Once);
+            _mockUsuarioRepository.Verify(c => c.UpdateAsync(id, entity), Times.Once);
             Assert.NotNull(result);
 
         }
@@ -286,16 +285,16 @@ namespace Services.UnitTests
         private void InitializedMapper()
         {
             var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<UsuarioDTO, UsuarioModel>().ReverseMap();
+                cfg.CreateMap<CriarUsuarioDTO, UsuarioModel>().ReverseMap();
+                cfg.CreateMap<AlterarUsuarioDTO, UsuarioModel>().ReverseMap();
                 cfg.CreateMap<UsuarioDTO, Usuario>().ReverseMap();
                 cfg.CreateMap<CriarUsuarioDTO, Usuario>().ReverseMap();
                 cfg.CreateMap<AlterarUsuarioDTO, Usuario>().ReverseMap();
-                cfg.CreateMap<UsuarioModel, AlterarUsuarioDTO>().ReverseMap();
-                cfg.CreateMap<UsuarioModel, CriarUsuarioDTO>().ReverseMap();
-                cfg.CreateMap<UsuarioModel, Usuario>().ReverseMap();
-                
+                cfg.CreateMap<Usuario, UsuarioModel>().ReverseMap();
+
 
             });
-
             _mapper = config.CreateMapper();
         }
     }
