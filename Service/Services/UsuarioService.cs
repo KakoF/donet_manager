@@ -32,7 +32,7 @@ namespace Service.Services
             UsuarioDTO usuarioCache = await _cache.GetAsync<UsuarioDTO>($"Usuario_{id}");
             if (usuarioCache == null)
             {
-                var entity = await _repository.GetAsync(id);
+                var entity = await _repository.ReadAsync(id);
                 var usuario = _mapper.Map<UsuarioDTO>(entity);
                 _cache.Set($"Usuario_{id}", usuario);
                 return usuario;
@@ -42,7 +42,7 @@ namespace Service.Services
 
         public async Task<IEnumerable<UsuarioDTO>> ReadAsync()
         {
-            var list = await _repository.GetAsync();
+            var list = await _repository.ReadAsync();
             return _mapper.Map<IEnumerable<UsuarioDTO>>(list);
         }
 
@@ -57,15 +57,17 @@ namespace Service.Services
         {
             var model = _mapper.Map<UsuarioModel>(data);
             model.Validate();
+
             var entity = _mapper.Map<Usuario>(model);
-            var result = await _repository.PostAsync(entity);
+            var result = await _repository.CreateAsync(entity);
+
             _unitOfWork.CommitTransaction();
             return _mapper.Map<UsuarioDTO>(result);
         }
 
         public async Task<UsuarioDTO> UpdateAsync(int id, AlterarUsuarioDTO data)
         {
-            var entity = await _repository.GetAsync(id);
+            var entity = await _repository.ReadAsync(id);
             if (entity == null)
                 return null;
 
@@ -73,7 +75,7 @@ namespace Service.Services
             _mapper.Map(data, model);
             model.Validate();
             _mapper.Map(model, entity);
-            var result = await _repository.PutAsync(id, entity);
+            var result = await _repository.UpdateAsync(id, entity);
             _cache.Remove($"Usuario_{id}");
             _unitOfWork.CommitTransaction();
             return _mapper.Map<UsuarioDTO>(result);
