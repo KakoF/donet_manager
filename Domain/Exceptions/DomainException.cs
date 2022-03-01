@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Domain.Exceptions
 {
     [Serializable]
-    public class DomainException : Exception, ISerializable
+    public class DomainException : Exception
     {
         internal List<string> _errors;
 
