@@ -46,5 +46,5 @@ jobs:
           dotnet build
            # Running unit tests - 'opencover ' output format
            dotnet test Services.UnitTests/Services.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]*
-           mv ./Services.UnitTests/coverage.opencover.xml opencover.xml 
+           # mv ./Services.UnitTests/coverage.opencover.xml opencover.xml 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
