@@ -31,7 +31,6 @@ CREATE TABLE master_integration_test.dbo.Usuario (
 	DataCriacao datetime2(0) NOT NULL,
 	DataAtualizacao datetime2(0) NULL
 );
-);
 
 ```
 
