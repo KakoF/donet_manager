@@ -36,7 +36,7 @@ namespace Data.DataConnector
         {
             dbConnection?.Dispose();
             dbTransaction?.Dispose();
-            GC.SuppressFinalize(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

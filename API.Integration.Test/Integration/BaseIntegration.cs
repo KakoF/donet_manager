@@ -12,7 +12,6 @@ namespace API.Integration.Test.Integration
     public class BaseIntegration : IDisposable
     {
         public HttpClient client{ get; private set; }
-        public IMapper mapper { get; set; }
         public string hostApi { get; set; }
 
         public HttpResponseMessage response { get; set; }
@@ -22,7 +21,7 @@ namespace API.Integration.Test.Integration
             hostApi = "https://localhost:44372/api/";
             var builder = new WebHostBuilder().UseEnvironment("Testing").UseStartup<Startup>();
             var server = new TestServer(builder);
-            mapper = new AutoMapperFixture().GetMapper();
+            AutoMapperFixture autmapper = new AutoMapperFixture();
             client = server.CreateClient();
 
         }
@@ -51,6 +50,7 @@ namespace API.Integration.Test.Integration
         public void Dispose()
         {
             client.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -58,10 +58,10 @@ namespace API.Integration.Test.Integration
     {
         public void Dispose()
         {
-            throw new NotImplementedException();
+            GC.SuppressFinalize(this);
         }
 
-        public IMapper GetMapper()
+        public static IMapper GetMapper()
         {
             var config = new MapperConfiguration(cfg =>
             {
