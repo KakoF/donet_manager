@@ -1,11 +1,9 @@
 ﻿using API.Helpers;
 using API.Integration.Test.Integration;
 using Domain.DTO.Usuario;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -20,7 +18,7 @@ namespace API.Integration.Test
         public string _email{ get; set; }
 
         [Fact]
-        public async Task Should_Do_Crud_Usuario()
+        public async Task Should_Do_CrudUsuario()
         {
             _nome = "Marcos";
             _email = "marcos@gmail.com";

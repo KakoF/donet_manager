@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Data.Interfaces.DataConnector;
+using Data.Interfaces.Redis;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using System;
@@ -12,14 +13,17 @@ namespace Data.Repositories
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly IDbConnector _dbConnector;
+        private readonly IRedisIntegrator _cache;
 
-        public UsuarioRepository(IDbConnector dbConnector)
+        public UsuarioRepository(IDbConnector dbConnector, IRedisIntegrator cache)
         {
             _dbConnector = dbConnector;
+            _cache = cache;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
+            _cache.Remove("Usuarios");
             string sql = " Delete FROM [dbo].[Usuario] Where Id = @Id";
             var delete = await _dbConnector.dbConnection.ExecuteAsync(sql, new { Id = id }, _dbConnector.dbTransaction);
             return Convert.ToBoolean(delete);
@@ -34,14 +38,21 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<Usuario>> ReadAsync()
         {
-            string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario]";
-            var usuarios = await _dbConnector.dbConnection.QueryAsync<Usuario>(sql, _dbConnector.dbTransaction);
-            return usuarios.ToList();
+            IEnumerable<Usuario> usuariosCache = await _cache.GetListAsync<Usuario>("Usuarios");
+            if (usuariosCache == null)
+            {
+                string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario]";
+                var usuarios = await _dbConnector.dbConnection.QueryAsync<Usuario>(sql, _dbConnector.dbTransaction);
+                _cache.SetList("Usuarios", usuarios);
+                return usuarios.ToList();
+            }
+            return usuariosCache;
+           
         }
 
         public async Task<Usuario> CreateAsync(Usuario data)
         {
-
+            _cache.Remove("Usuarios");
             string sql = @"INSERT INTO [dbo].[Usuario]
                                  ([Nome]
                                  ,[Email]
@@ -63,6 +74,7 @@ namespace Data.Repositories
 
         public async Task<Usuario> UpdateAsync(int id, Usuario data)
         {
+            _cache.Remove("Usuarios");
             string sql = @"Update [dbo].[Usuario] Set
                                  Nome = @Nome
                                  ,Email = @Email

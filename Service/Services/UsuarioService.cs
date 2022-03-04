@@ -17,27 +17,20 @@ namespace Service.Services
         private readonly IUsuarioRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRedisIntegrator _cache;
-
-        public UsuarioService(IUsuarioRepository repository, IMapper mapper, IUnitOfWork unitOfWork, IRedisIntegrator cache)
+       
+        public UsuarioService(IUsuarioRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _cache = cache;
+            
         }
 
         public async Task<UsuarioDto> ReadAsync(int id)
         {
-            UsuarioDto usuarioCache = await _cache.GetAsync<UsuarioDto>($"Usuario_{id}");
-            if (usuarioCache == null)
-            {
-                var entity = await _repository.ReadAsync(id);
-                var usuario = _mapper.Map<UsuarioDto>(entity);
-                _cache.Set($"Usuario_{id}", usuario);
-                return usuario;
-            }
-            return _mapper.Map<UsuarioDto>(usuarioCache);
+            var entity = await _repository.ReadAsync(id);
+            var usuario = _mapper.Map<UsuarioDto>(entity);
+            return usuario;
         }
 
         public async Task<IEnumerable<UsuarioDto>> ReadAsync()
@@ -76,7 +69,6 @@ namespace Service.Services
             model.Validate();
             _mapper.Map(model, entity);
             var result = await _repository.UpdateAsync(id, entity);
-            _cache.Remove($"Usuario_{id}");
             _unitOfWork.CommitTransaction();
             return _mapper.Map<UsuarioDto>(result);
         }

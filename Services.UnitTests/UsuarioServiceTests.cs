@@ -23,8 +23,6 @@ namespace Services.UnitTests
         private readonly MockRepository _mockRepository;
         private readonly Mock<IUsuarioRepository> _mockUsuarioRepository;
         Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
-        Mock<IRedisIntegrator> _mockRedisIntegrator = new Mock<IRedisIntegrator>();
-        
         IMapper _mapper;
 
         public UsuarioServiceTests()
@@ -34,34 +32,10 @@ namespace Services.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose);
             _mockUsuarioRepository = _mockRepository.Create<IUsuarioRepository>();
             _mockUnitOfWork = _mockRepository.Create<IUnitOfWork>();
-            _mockRedisIntegrator = _mockRepository.Create<IRedisIntegrator>();
-            _sut = new UsuarioService(_mockUsuarioRepository.Object, _mapper, _mockUnitOfWork.Object, _mockRedisIntegrator.Object);
+            _sut = new UsuarioService(_mockUsuarioRepository.Object, _mapper, _mockUnitOfWork.Object);
 
         }
 
-        [Fact]
-        public async void GetAsync_ValidId_ReturnCachedUser()
-        {
-            //Arr
-            int id = It.IsAny<int>();
-            UsuarioDto UsuarioDto = new UsuarioDto() 
-            { 
-                Id = id, 
-                Nome = "Marcos", 
-                Email= "kakoferrare@gmail.com" 
-            };
-            _mockRedisIntegrator.Setup(c => c.GetAsync<UsuarioDto>($"Usuario_{id}")).ReturnsAsync(UsuarioDto);
-
-            //Act
-            var result = await _sut.ReadAsync(id);
-
-            //Assert
-            _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Never);
-
-            Assert.Equal(result.Id, id);
-            Assert.True(result.Equals(_mapper.Map<UsuarioDto>(UsuarioDto)));
-
-        }
 
         [Fact]
         public async void GetAsync_ValidId_ReturnUser()
@@ -79,6 +53,23 @@ namespace Services.UnitTests
 
             Assert.Equal(result.Id, id);
             Assert.True(result.Equals(_mapper.Map<UsuarioDto>(entity)));
+
+        }
+
+        [Fact]
+        public async void GetAsync_IdNotFound_ReturnNull()
+        {
+            //Arr
+            int id = It.IsAny<int>();
+            Usuario entity = null;
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
+
+            //Act
+            var result = await _sut.ReadAsync(id);
+
+            //Assert
+            _mockUsuarioRepository.Verify(c => c.ReadAsync(id), Times.Once);
+            Assert.Null(result);
 
         }
 

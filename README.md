@@ -41,3 +41,11 @@ Aqruivo appsettings já aponta para a infra que docker irá subir
 
 - Rodar o projeto
 ```
+
+
+## Coverage
+```
+dotnet tool install -g dotnet-reportgenerator-globaltool  
+
+reportgenerator -reports:".\Services.UnitTests\TestResults\f41cb602-de29-4be6-a250-76acd941ed85\coverage.cobertura.xml" -targetdir:"coverageresults" -reporttypes:Html
+```
