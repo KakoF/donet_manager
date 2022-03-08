@@ -32,5 +32,10 @@ namespace Data.DataConnector
                 dbConnector.dbTransaction.Rollback();
             }
         }
+
+        public void Dispose()
+        {
+            dbConnector.Dispose();
+        }
     }
 }
