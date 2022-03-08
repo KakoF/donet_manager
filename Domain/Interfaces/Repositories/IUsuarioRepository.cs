@@ -4,12 +4,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IUsuarioRepository
+    public interface IUsuarioRepository : IRepository<Usuario>
     {
-        Task<Usuario> ReadAsync(int id);
-        Task<IEnumerable<Usuario>> ReadAsync();
-        Task<Usuario> CreateAsync(Usuario data);
-        Task<Usuario> UpdateAsync(int id, Usuario data);
-        Task<bool> DeleteAsync(int id);
+       
     }
 }
