@@ -17,13 +17,13 @@ namespace Service.Services
         private readonly IUsuarioRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-       
+
         public UsuarioService(IUsuarioRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            
+
         }
 
         public async Task<UsuarioDto> ReadAsync(int id)
@@ -48,14 +48,29 @@ namespace Service.Services
 
         public async Task<UsuarioDto> CreateAsync(CriarUsuarioDto data)
         {
-            var model = _mapper.Map<UsuarioModel>(data);
-            model.Validate();
 
-            var entity = _mapper.Map<Usuario>(model);
-            var result = await _repository.CreateAsync(entity);
+            try
+            {
+                var model = _mapper.Map<UsuarioModel>(data);
+                model.Validate();
 
-            _unitOfWork.CommitTransaction();
-            return _mapper.Map<UsuarioDto>(result);
+                var entity = _mapper.Map<Usuario>(model);
+
+                _unitOfWork.BeginTransaction();
+                var result = await _repository.CreateAsync(entity);
+                _unitOfWork.CommitTransaction();
+                return _mapper.Map<UsuarioDto>(result);
+            }
+            catch
+            {
+                _unitOfWork.RollbackTransaction();
+                throw new DomainException("Não foi possível cadastrar o usuário");
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
+            
         }
 
         public async Task<UsuarioDto> UpdateAsync(int id, AlterarUsuarioDto data)
@@ -64,13 +79,26 @@ namespace Service.Services
             if (entity == null)
                 return null;
 
-            var model = _mapper.Map<UsuarioModel>(entity);
-            _mapper.Map(data, model);
-            model.Validate();
-            _mapper.Map(model, entity);
-            var result = await _repository.UpdateAsync(id, entity);
-            _unitOfWork.CommitTransaction();
-            return _mapper.Map<UsuarioDto>(result);
+            try
+            {
+                var model = _mapper.Map<UsuarioModel>(entity);
+                _mapper.Map(data, model);
+                model.Validate();
+                _mapper.Map(model, entity);
+                var result = await _repository.UpdateAsync(id, entity);
+                _unitOfWork.CommitTransaction();
+                return _mapper.Map<UsuarioDto>(result);
+            }
+            catch
+            {
+                _unitOfWork.RollbackTransaction();
+                throw new DomainException("Não foi possível alterar o usuário");
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
+           
         }
     }
 }
