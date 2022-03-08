@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class UsuarioRepository : IUsuarioRepository
+    public class UsuarioRepository : Repository<Usuario>
     {
         private readonly IDbConnector _dbConnector;
         private readonly IRedisIntegrator _cache;
@@ -21,7 +21,7 @@ namespace Data.Repositories
             _cache = cache;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        /*public async Task<bool> DeleteAsync(int id)
         {
             _cache.Remove("Usuarios");
             string sql = " Delete FROM [dbo].[Usuario] Where Id = @Id";
@@ -88,7 +88,7 @@ namespace Data.Repositories
                 DataAtualizacao = DateTime.Now,
             }, _dbConnector.dbTransaction);
             return data;
-        }
+        }*/
         
 
     }

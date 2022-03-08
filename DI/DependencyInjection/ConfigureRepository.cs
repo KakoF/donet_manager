@@ -10,7 +10,8 @@ namespace DI.DependencyInjection
     {
         public static void ConfigureDependenciesRepository(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            //serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
