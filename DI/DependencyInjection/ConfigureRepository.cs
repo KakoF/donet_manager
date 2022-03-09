@@ -1,5 +1,7 @@
 ﻿using Data.DataConnector;
 using Data.Interfaces.DataConnector;
+using Data.Interfaces.Redis;
+using Data.Redis;
 using Data.Repositories;
 using Domain.Interfaces.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,7 @@ namespace DI.DependencyInjection
         {
             //serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            serviceCollection.AddScoped<IRedisIntegrator, RedisIntegrator>();
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }

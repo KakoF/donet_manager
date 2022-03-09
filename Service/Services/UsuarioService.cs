@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Data.Implementations;
 using Data.Interfaces.DataConnector;
-using Data.Interfaces.Redis;
+
 using Domain.DTO.Usuario;
 using Domain.Entities;
 using Domain.Exceptions;
+
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
@@ -14,11 +16,11 @@ namespace Service.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly IUsuarioRepository _repository;
+        private readonly UsarioImplementation _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsuarioService(IUsuarioRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(UsarioImplementation repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _mapper = mapper;
