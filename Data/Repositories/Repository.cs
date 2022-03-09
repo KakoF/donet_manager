@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : Base
+    public abstract class Repository<T> : IRepository<T> where T : Base
     {
         private readonly IDbConnector _dbConnector;
         private readonly IRedisIntegrator _cache;
 
-        public virtual string InsertQuery => "";
-        public virtual string InsertQueryReturnInserted => "";
-        public virtual string UpdateByIdQuery => "";
-        public virtual string DeleteByIdQuery => "";
-        public virtual string SelectAllQuery => "";
-        public virtual string SelectByIdQuery => "";
+        protected abstract string InsertQuery { get; }
+        protected abstract string InsertQueryReturnInserted { get; }
+        protected abstract string UpdateByIdQuery { get; }
+        protected abstract string DeleteByIdQuery { get; }
+        protected abstract string SelectByIdQuery { get; }
+        protected abstract string SelectAllQuery { get; }
 
         public Repository(IDbConnector dbConnector, IRedisIntegrator cache)
         {
