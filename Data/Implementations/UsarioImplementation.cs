@@ -1,4 +1,5 @@
-﻿using Data.Interfaces.DataConnector;
+﻿using Dapper;
+using Data.Interfaces.DataConnector;
 using Data.Interfaces.Redis;
 using Data.Repositories;
 using Domain.Entities;
@@ -20,7 +21,18 @@ namespace Data.Implementations
         protected override string SelectAllQuery => $"SELECT * FROM [{nameof(Usuario)}]";
         protected override string SelectByIdQuery => $"SELECT * FROM [{nameof(Usuario)}] WHERE {nameof(Usuario.Id)} = @{nameof(Usuario.Id)}";
 
-
+        protected override bool CreateCache => false;
+        protected override bool CreateListCache => false;
+        protected override bool ReadCache => false;
+        protected override bool ReadListCache => false;
+        
         public UsarioImplementation(IDbConnector dbConnector, IRedisIntegrator cache) : base(dbConnector, cache) { }
+
+        //Exemplo de implementação
+        public async Task<IEnumerable<Usuario>> GetAllOtherAsync()
+        {
+            var data = await _dbConnector.dbConnection.QueryAsync<Usuario>(SelectAllQuery, _dbConnector.dbTransaction);
+            return data;
+        }
     }
 }

@@ -12,8 +12,8 @@ namespace Data.Repositories
 {
     public abstract class Repository<T> : IRepository<T> where T : Base
     {
-        private readonly IDbConnector _dbConnector;
-        private readonly IRedisIntegrator _cache;
+        protected readonly IDbConnector _dbConnector;
+        protected readonly IRedisIntegrator _cache;
 
         protected abstract string InsertQuery { get; }
         protected abstract string InsertQueryReturnInserted { get; }
@@ -21,6 +21,11 @@ namespace Data.Repositories
         protected abstract string DeleteByIdQuery { get; }
         protected abstract string SelectByIdQuery { get; }
         protected abstract string SelectAllQuery { get; }
+        protected abstract bool CreateCache { get; }
+        protected abstract bool CreateListCache { get; }
+        protected abstract bool ReadCache { get; }
+        protected abstract bool ReadListCache { get; }
+
 
         public Repository(IDbConnector dbConnector, IRedisIntegrator cache)
         {
@@ -49,10 +54,10 @@ namespace Data.Repositories
             //IEnumerable<T> usuariosCache = await _cache.GetListAsync<T>("Usuarios");
             //if (usuariosCache == null)
             //{
-                //string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario]";
-                var data = await _dbConnector.dbConnection.QueryAsync<T>(SelectAllQuery, _dbConnector.dbTransaction);
-                //_cache.SetList("Usuarios", usuarios);
-                return data.ToList();
+            //string sql = "SELECT Id,Nome,Email,DataCriacao,DataAtualizacao FROM [dbo].[Usuario]";
+            var data = await _dbConnector.dbConnection.QueryAsync<T>(SelectAllQuery, _dbConnector.dbTransaction);
+            //_cache.SetList("Usuarios", usuarios);
+            return data.ToList();
             //}
             //return usuariosCache;
         }

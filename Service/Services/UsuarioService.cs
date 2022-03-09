@@ -16,13 +16,13 @@ namespace Service.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly UsarioImplementation _repository;
+        private readonly UsarioImplementation _implementation;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsuarioService(UsarioImplementation repository, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(UsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _implementation = implementation;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
 
@@ -30,20 +30,20 @@ namespace Service.Services
 
         public async Task<UsuarioDto> ReadAsync(int id)
         {
-            var entity = await _repository.ReadAsync(id);
+            var entity = await _implementation.ReadAsync(id);
             var usuario = _mapper.Map<UsuarioDto>(entity);
             return usuario;
         }
 
         public async Task<IEnumerable<UsuarioDto>> ReadAsync()
         {
-            var list = await _repository.ReadAsync();
+            var list = await _implementation.ReadAsync();
             return _mapper.Map<IEnumerable<UsuarioDto>>(list);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var delete = await _repository.DeleteAsync(id);
+            var delete = await _implementation.DeleteAsync(id);
             return delete;
 
         }
@@ -59,7 +59,7 @@ namespace Service.Services
                 var entity = _mapper.Map<Usuario>(model);
 
                 _unitOfWork.BeginTransaction();
-                var result = await _repository.CreateAsync(entity);
+                var result = await _implementation.CreateAsync(entity);
                 _unitOfWork.CommitTransaction();
                 return _mapper.Map<UsuarioDto>(result);
             }
@@ -77,7 +77,7 @@ namespace Service.Services
 
         public async Task<UsuarioDto> UpdateAsync(int id, AlterarUsuarioDto data)
         {
-            var entity = await _repository.ReadAsync(id);
+            var entity = await _implementation.ReadAsync(id);
             if (entity == null)
                 return null;
 
@@ -87,7 +87,7 @@ namespace Service.Services
                 _mapper.Map(data, model);
                 model.Validate();
                 _mapper.Map(model, entity);
-                var result = await _repository.UpdateAsync(id, entity);
+                var result = await _implementation.UpdateAsync(id, entity);
                 _unitOfWork.CommitTransaction();
                 return _mapper.Map<UsuarioDto>(result);
             }
