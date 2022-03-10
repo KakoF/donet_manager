@@ -5,6 +5,7 @@ using Data.Interfaces.Redis;
 using Data.Redis;
 using Data.Repositories;
 using Domain.Entities;
+using Domain.Interfaces.Implementations;
 using Domain.Interfaces.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ namespace DI.DependencyInjection
             serviceCollection.AddScoped<Repository<Base>>((serviceProvider) => (Repository<Base>)serviceProvider.GetRequiredService<IRepository<Base>>());
             serviceCollection.AddScoped<IRedisIntegrator, RedisIntegrator>();
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+            serviceCollection.AddScoped<IUsarioImplementation, UsarioImplementation>();
 
         }
     }

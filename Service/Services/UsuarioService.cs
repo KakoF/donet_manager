@@ -5,7 +5,7 @@ using Data.Interfaces.DataConnector;
 using Domain.DTO.Usuario;
 using Domain.Entities;
 using Domain.Exceptions;
-
+using Domain.Interfaces.Implementations;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
@@ -16,11 +16,11 @@ namespace Service.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly UsarioImplementation _implementation;
+        private readonly IUsarioImplementation _implementation;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsuarioService(UsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(IUsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _implementation = implementation;
             _mapper = mapper;
@@ -66,7 +66,7 @@ namespace Service.Services
             catch
             {
                 _unitOfWork.RollbackTransaction();
-                throw new DomainException("Não foi possível cadastrar o usuário");
+                throw;
             }
             finally
             {
@@ -94,7 +94,7 @@ namespace Service.Services
             catch
             {
                 _unitOfWork.RollbackTransaction();
-                throw new DomainException("Não foi possível alterar o usuário");
+                throw;
             }
             finally
             {

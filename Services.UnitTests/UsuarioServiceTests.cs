@@ -13,6 +13,7 @@ using System.Linq;
 using Domain.Models;
 using Domain.Exceptions;
 using Data.Implementations;
+using Domain.Interfaces.Implementations;
 
 namespace Services.UnitTests
 {
@@ -22,7 +23,7 @@ namespace Services.UnitTests
 
 
         private readonly MockRepository _mockRepository;
-        private readonly Mock<UsarioImplementation> _mockUsuarioRepository;
+        private readonly Mock<IUsarioImplementation> _mockUsuarioRepository;
         Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
         IMapper _mapper;
 
@@ -31,7 +32,7 @@ namespace Services.UnitTests
             InitializedMapper();
 
             _mockRepository = new MockRepository(MockBehavior.Loose);
-            _mockUsuarioRepository = _mockRepository.Create<UsarioImplementation>();
+            _mockUsuarioRepository = _mockRepository.Create<IUsarioImplementation>();
             _mockUnitOfWork = _mockRepository.Create<IUnitOfWork>();
             _sut = new UsuarioService(_mockUsuarioRepository.Object, _mapper, _mockUnitOfWork.Object);
 

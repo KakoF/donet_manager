@@ -34,19 +34,21 @@ namespace Data.Repositories
         }
 
 
-        public Task<T> CreateAsync(T data)
+        public async Task<T> CreateAsync(T data)
         {
-            throw new NotImplementedException();
+            T entity = await _dbConnector.dbConnection.QuerySingleAsync<T>(InsertQueryReturnInserted, data);
+            return entity;
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return  await _dbConnector.dbConnection.ExecuteAsync(DeleteByIdQuery, new { Id = id });
         }
 
-        public Task<T> ReadAsync(int id)
+        public async Task<T> ReadAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _dbConnector.dbConnection.QueryAsync<T>(SelectByIdQuery, new { Id = id });
+            return entity.FirstOrDefault();
         }
 
         public async Task<IEnumerable<T>> ReadAsync()
@@ -64,7 +66,7 @@ namespace Data.Repositories
 
         public Task<T> UpdateAsync(int id, T data)
         {
-            throw new NotImplementedException();
+            return await dbConn.ExecuteAsync(UpdateByIdQuery, obj, transaction: dbTransaction);
         }
     }
 }
