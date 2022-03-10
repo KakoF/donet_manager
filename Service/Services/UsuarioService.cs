@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Data.Implementations;
 using Data.Interfaces.DataConnector;
-using Data.Interfaces.Redis;
+
 using Domain.DTO.Usuario;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Interfaces.Implementations;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
@@ -14,13 +16,13 @@ namespace Service.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly IUsuarioRepository _repository;
+        private readonly IUsarioImplementation _implementation;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsuarioService(IUsuarioRepository repository, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(IUsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _implementation = implementation;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
 
@@ -28,20 +30,20 @@ namespace Service.Services
 
         public async Task<UsuarioDto> ReadAsync(int id)
         {
-            var entity = await _repository.ReadAsync(id);
+            var entity = await _implementation.ReadAsync(id);
             var usuario = _mapper.Map<UsuarioDto>(entity);
             return usuario;
         }
 
         public async Task<IEnumerable<UsuarioDto>> ReadAsync()
         {
-            var list = await _repository.ReadAsync();
+            var list = await _implementation.ReadAsync();
             return _mapper.Map<IEnumerable<UsuarioDto>>(list);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var delete = await _repository.DeleteAsync(id);
+            var delete = await _implementation.DeleteAsync(id);
             return delete;
 
         }
@@ -53,18 +55,18 @@ namespace Service.Services
             {
                 var model = _mapper.Map<UsuarioModel>(data);
                 model.Validate();
-
+                model.SetCreate();
                 var entity = _mapper.Map<Usuario>(model);
 
                 _unitOfWork.BeginTransaction();
-                var result = await _repository.CreateAsync(entity);
+                var result = await _implementation.CreateAsync(entity);
                 _unitOfWork.CommitTransaction();
                 return _mapper.Map<UsuarioDto>(result);
             }
             catch
             {
                 _unitOfWork.RollbackTransaction();
-                throw new DomainException("Não foi possível cadastrar o usuário");
+                throw;
             }
             finally
             {
@@ -75,7 +77,7 @@ namespace Service.Services
 
         public async Task<UsuarioDto> UpdateAsync(int id, AlterarUsuarioDto data)
         {
-            var entity = await _repository.ReadAsync(id);
+            var entity = await _implementation.ReadAsync(id);
             if (entity == null)
                 return null;
 
@@ -84,15 +86,16 @@ namespace Service.Services
                 var model = _mapper.Map<UsuarioModel>(entity);
                 _mapper.Map(data, model);
                 model.Validate();
+                model.SetUpdate();
                 _mapper.Map(model, entity);
-                var result = await _repository.UpdateAsync(id, entity);
+                var result = await _implementation.UpdateAsync(id, entity);
                 _unitOfWork.CommitTransaction();
                 return _mapper.Map<UsuarioDto>(result);
             }
             catch
             {
                 _unitOfWork.RollbackTransaction();
-                throw new DomainException("Não foi possível alterar o usuário");
+                throw;
             }
             finally
             {

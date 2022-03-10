@@ -1,5 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.Validators;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Models
@@ -28,6 +29,16 @@ namespace Domain.Models
             }
 
             return true;
+        }
+
+        public void SetCreate()
+        {
+            DataCriacao = DateTime.UtcNow;
+        }
+
+        public void SetUpdate()
+        {
+            DataAtualizacao = DateTime.UtcNow;
         }
     }
 }
