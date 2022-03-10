@@ -39,14 +39,14 @@ namespace Data.Repositories
 
         public async Task<T> CreateAsync(T data)
         {
-            T entity = await _dbConnector.dbConnection.QuerySingleAsync<T>(InsertQueryReturnInserted, data);
+            var entity = await _dbConnector.dbConnection.QuerySingleAsync<T>(InsertQueryReturnInserted, data, _dbConnector.dbTransaction);
             RemoveAllCacheData(entity.Id);
             return entity;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            int delete = await _dbConnector.dbConnection.ExecuteAsync(DeleteByIdQuery, new { Id = id });
+            int delete = await _dbConnector.dbConnection.ExecuteAsync(DeleteByIdQuery, new { Id = id }, _dbConnector.dbTransaction);
             RemoveAllCacheData(id);
             return Convert.ToBoolean(delete);
         }
@@ -74,7 +74,7 @@ namespace Data.Repositories
                     return dataCache;
             }
            
-            var data = await _dbConnector.dbConnection.QueryAsync<T>(SelectAllQuery, _dbConnector.dbTransaction);
+            var data = await _dbConnector.dbConnection.QueryAsync<T>(SelectAllQuery);
             if(CreateListCache)
                 SetDataCache(data);
 
@@ -83,7 +83,7 @@ namespace Data.Repositories
 
         public async Task<T> UpdateAsync(int id, T data)
         {
-            await _dbConnector.dbConnection.ExecuteAsync(UpdateByIdQuery, data);
+            await _dbConnector.dbConnection.ExecuteAsync(UpdateByIdQuery, data, _dbConnector.dbTransaction);
             RemoveAllCacheData(id);
             return data;
         }

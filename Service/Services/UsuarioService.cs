@@ -55,7 +55,7 @@ namespace Service.Services
             {
                 var model = _mapper.Map<UsuarioModel>(data);
                 model.Validate();
-
+                model.SetCreate();
                 var entity = _mapper.Map<Usuario>(model);
 
                 _unitOfWork.BeginTransaction();
@@ -86,6 +86,7 @@ namespace Service.Services
                 var model = _mapper.Map<UsuarioModel>(entity);
                 _mapper.Map(data, model);
                 model.Validate();
+                model.SetUpdate();
                 _mapper.Map(model, entity);
                 var result = await _implementation.UpdateAsync(id, entity);
                 _unitOfWork.CommitTransaction();
