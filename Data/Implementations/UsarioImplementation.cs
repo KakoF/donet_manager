@@ -22,11 +22,14 @@ namespace Data.Implementations
         protected override string SelectAllQuery => $"SELECT * FROM [{nameof(Usuario)}]";
         protected override string SelectByIdQuery => $"SELECT * FROM [{nameof(Usuario)}] WHERE {nameof(Usuario.Id)} = @{nameof(Usuario.Id)}";
 
-        protected override bool CreateCache => false;
-        protected override bool CreateListCache => false;
-        protected override bool ReadCache => false;
-        protected override bool ReadListCache => false;
-        
+        protected override bool CreateCache => true;
+        protected override bool CreateListCache => true;
+        protected override bool ReadCache => true;
+        protected override bool ReadListCache => true;
+        protected override int MinutesCacheTime => 5;
+        protected override string NameDataCache => nameof(Usuario);
+
+
         public UsarioImplementation(IDbConnector dbConnector, IRedisIntegrator cache) : base(dbConnector, cache) { }
 
         //Exemplo de implementação
