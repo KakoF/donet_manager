@@ -180,16 +180,36 @@ namespace Services.UnitTests
             Assert.NotNull(ex.Result.Errors);
 
         }
+        [Fact]
+        public void CreateAsync_InvalidIntGenero_ReturnDomainException()
+        {
+            //Arr
+            var createModel = new CriarUsuarioDto()
+            {
+                Nome = "Marcos",
+                Email = "kakoferrare@gmail.com",
+            };
+
+            //Act
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.CreateAsync(createModel));
+
+            //Assert
+            Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
+            Assert.NotNull(ex.Result.Errors);
+
+        }
+
 
         [Fact]
         public async void CreateAsync_UserDtoAccepted_ReturnUserDto()
         {
             //Arr
-            Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", It.IsAny<int>(), DateTime.Now, null);
+            Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", 1, DateTime.Now, null);
             var create = new CriarUsuarioDto()
             {
                 Nome = "Marcos",
-                Email ="kakoferrare@gmail.com"
+                Email ="kakoferrare@gmail.com",
+                GeneroId = 1
             };
 
             _mockUsuarioRepository.Setup(c => c.CreateAsync(It.IsAny<Usuario>())).ReturnsAsync(entity);
@@ -209,7 +229,33 @@ namespace Services.UnitTests
         public void UpdateAsync_EmptyStringNome_ReturnDomainException()
         {
             //Arr
-            var updateModel = new AlterarUsuarioDto();
+            var updateModel = new AlterarUsuarioDto()
+            {
+                GeneroId = 1
+            };
+
+            int id = It.IsAny<int>();
+            Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", It.IsAny<int>(), DateTime.Now, null);
+
+
+            _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);
+            var ex = Assert.ThrowsAsync<DomainException>(async () => await _sut.UpdateAsync(id, updateModel));
+
+            //Assert
+            Assert.Equal("Alguns campos estão inválidos!", ex.Result.Message);
+            Assert.NotNull(ex.Result.Errors);
+
+        }
+
+
+        [Fact]
+        public void UpdateAsync_EmptyIntGenero_ReturnDomainException()
+        {
+            //Arr
+            var updateModel = new AlterarUsuarioDto()
+            {
+                Nome = "Kako"
+            };
 
             int id = It.IsAny<int>();
             Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", It.IsAny<int>(), DateTime.Now, null);
@@ -255,10 +301,11 @@ namespace Services.UnitTests
             var updateModel = new AlterarUsuarioDto()
             {
                 Nome = "Kako",
+                GeneroId = 1
             };
 
             int id = It.IsAny<int>();
-            Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", It.IsAny<int>(), DateTime.Now, DateTime.Now);
+            Usuario entity = new Usuario(id, "Marcos", "kakoferrare@gmail.com", 1, DateTime.Now, DateTime.Now);
 
           
             _mockUsuarioRepository.Setup(c => c.ReadAsync(id)).ReturnsAsync(entity);

@@ -25,7 +25,7 @@ namespace API.Integration.Test
             var response = new HttpResponseMessage();
             var result = "";
 
-            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email };
+            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email, GeneroId = 1 };
             response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
             result = await response.Content.ReadAsStringAsync();
 
@@ -50,7 +50,7 @@ namespace API.Integration.Test
             Assert.NotNull(getResponse.Data);
 
 
-            var usuarioAlterarDto = new AlterarUsuarioDto() { Nome = _nome,};
+            var usuarioAlterarDto = new AlterarUsuarioDto() { Nome = _nome, GeneroId = 1 };
             response = await PutJsonAsync(usuarioAlterarDto, $"{hostApi}usuario/{id}", client);
             result = await response.Content.ReadAsStringAsync();
 

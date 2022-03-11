@@ -39,16 +39,9 @@ INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Mulher Não-binário'
 
 ```
 ## Script Integração
-script para criar a tabela de Usuário
+copiar base para criar a testes de integração
 ```sh
 CREATE DATABASE master_integration_test
-
-CREATE TABLE master_integration_test.dbo.Usuario (
-	Id bigint IDENTITY(1,1) NOT NULL,
-	Nome varchar(60) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	Email varchar(180) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	DataCriacao datetime2(0) NOT NULL,
-	DataAtualizacao datetime2(0) NULL
 );
 
 ```
