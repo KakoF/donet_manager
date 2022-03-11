@@ -10,13 +10,20 @@ namespace Domain.Entities
         public string Nome { get; private set; }
         [JsonProperty("email")]
         public string Email { get; private set; }
-
+        public int GeneroId { get; private set; }
+        public Genero Genero { get; private set; }
         public Usuario() { }
 
-        public Usuario(int id, string nome, string email, DateTime dataCriacao, DateTime? dataAlteracao) : base(id, dataCriacao, dataAlteracao)
+        public Usuario(int id, string nome, string email, int generoId, DateTime dataCriacao, DateTime? dataAlteracao) : base(id, dataCriacao, dataAlteracao)
         {
             Nome = nome;
             Email = email;
+            GeneroId = generoId;
+        }
+
+        public void InitGenero(Genero genero)
+        {
+           Genero = genero;
         }
     }
 }

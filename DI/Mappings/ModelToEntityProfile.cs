@@ -10,6 +10,7 @@ namespace DI.Mappings
         public ModelToEntityProfile()
         {
             CreateMap<Usuario, UsuarioModel>().ReverseMap();
+            CreateMap<Genero, GeneroModel>().ReverseMap();
         }
     }
 }

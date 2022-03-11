@@ -11,6 +11,7 @@ namespace DI.Mappings
             CreateMap<UsuarioDto, UsuarioModel>().ReverseMap();
             CreateMap<CriarUsuarioDto, UsuarioModel>().ReverseMap();
             CreateMap<AlterarUsuarioDto, UsuarioModel>().ReverseMap();
+            CreateMap<GeneroDto, GeneroModel>().ReverseMap();
         }
     }
 }

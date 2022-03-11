@@ -41,6 +41,12 @@ namespace Service.Services
             return _mapper.Map<IEnumerable<UsuarioDto>>(list);
         }
 
+        public async Task<IEnumerable<UsuarioDto>> ReadUsuarioGeneroAsync()
+        {
+            var list = await _implementation.ReadUsuarioGeneroAsync();
+            return _mapper.Map<IEnumerable<UsuarioDto>>(list);
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var delete = await _implementation.DeleteAsync(id);

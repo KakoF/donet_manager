@@ -15,9 +15,6 @@ namespace DI.DependencyInjection
     {
         public static void ConfigureDependenciesRepository(IServiceCollection serviceCollection)
         {
-            //serviceCollection.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            //serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            //serviceCollection.AddScoped<IRepository<Base>>();
             serviceCollection.AddScoped<Repository<Base>>((serviceProvider) => (Repository<Base>)serviceProvider.GetRequiredService<IRepository<Base>>());
             serviceCollection.AddScoped<IRedisIntegrator, RedisIntegrator>();
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();

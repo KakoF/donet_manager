@@ -7,5 +7,8 @@ namespace Domain.DTO.Usuario
         [Required(ErrorMessage = "Nome é campo obrigatório.")]
         [StringLength(60, ErrorMessage = "Nome deve ter no máximo {1} caracteres.")]
         public string Nome { get; set; }
+
+        [Required(ErrorMessage = "Gênero é campo obrigatório.")]
+        public int GeneroId { get; set; }
     }
 }

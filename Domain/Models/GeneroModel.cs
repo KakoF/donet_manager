@@ -5,20 +5,18 @@ using System.Collections.Generic;
 
 namespace Domain.Models
 {
-    public class UsuarioModel : BaseModel
+    public class GeneroModel : BaseModel
     {
         public string Nome { get; set; }
-        public string Email { get; set; }
-        public int GeneroId { get; set; }
-        public GeneroModel Genero { get; set; }
-        public UsuarioModel()
+
+        public GeneroModel()
         {
             _errors = new List<string>();
         }
 
         public override bool Validate()
         {
-            var validator = new UsuarioValidator();
+            var validator = new GeneroValidator();
             var validation = validator.Validate(this);
 
             if (!validation.IsValid)
@@ -31,5 +29,7 @@ namespace Domain.Models
 
             return true;
         }
+
+    
     }
 }

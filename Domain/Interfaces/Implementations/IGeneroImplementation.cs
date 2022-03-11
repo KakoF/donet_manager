@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Implementations
 {
-    public interface IUsarioImplementation : IRepository<Usuario>
+    public interface IGeneroImplementation : IRepository<Genero>
     {
-        public Task<IEnumerable<Usuario>> ReadUsuarioGeneroAsync();
+       
     }
 }

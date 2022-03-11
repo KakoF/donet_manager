@@ -28,6 +28,13 @@ namespace API.Controllers
             return new ListSuccessResponse<UsuarioDto>((int)HttpStatusCode.OK, result, result.Any() ? "Usuários encontrados" : "Nenhum usuário encontrado");
         }
 
+        [HttpGet, Route("GetUsuarioGenero"), Produces("application/json", Type = typeof(ListSuccessResponse<UsuarioDto>))]
+        public async Task<ActionResult<ListSuccessResponse<UsuarioDto>>> GetUsuarioGenero()
+        {
+            var result = await _service.ReadUsuarioGeneroAsync();
+            return new ListSuccessResponse<UsuarioDto>((int)HttpStatusCode.OK, result, result.Any() ? "Usuários encontrados" : "Nenhum usuário encontrado");
+        }
+
         [HttpGet]
         [Route("{id}", Name = "GetWithId")]
         public async Task<ActionResult<DataSuccessResponse<UsuarioDto>>> Get(int id)

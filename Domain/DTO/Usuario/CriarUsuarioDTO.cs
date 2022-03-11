@@ -11,5 +11,7 @@ namespace Domain.DTO.Usuario
         [EmailAddress(ErrorMessage = "E-mail inválido.")]
         [StringLength(180, ErrorMessage = "E-mail deve ter no máximo {1} caracteres.")]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Gênero é campo obrigatório.")]
+        public int GeneroId { get; set; }
     }
 }

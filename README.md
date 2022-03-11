@@ -10,13 +10,32 @@ docker-compose up -d
 ## Script
 script para criar a tabela de Usuário
 ```sh
-CREATE TABLE master.dbo.Usuario (
-	Id bigint IDENTITY(1,1) NOT NULL,
-	Nome varchar(60) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	Email varchar(180) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+
+CREATE TABLE master.dbo.Genero (
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Nome varchar(60) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL,
 	DataCriacao datetime2(0) NOT NULL,
 	DataAtualizacao datetime2(0) NULL
 );
+
+
+CREATE TABLE master.dbo.Usuario (
+	Id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Nome varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	Email varchar(180) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	DataCriacao datetime2(0) NOT NULL,
+	DataAtualizacao datetime2(0) NULL,
+	GeneroId int NOT NULL,
+	FOREIGN KEY(GeneroId) REFERENCES Genero(Id)
+);
+
+
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Homem Transgênero', '2022-03-10');
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Homem Cisgênero', '2022-03-10');
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Homem Não-binário', '2022-03-10');
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Mulher Transgênero', '2022-03-10');
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Mulher Cisgênero', '2022-03-10');
+INSERT INTO master.dbo.Genero (Nome, DataCriacao) VALUES ('Mulher Não-binário', '2022-03-10');
 
 ```
 ## Script Integração

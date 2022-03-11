@@ -11,6 +11,7 @@ namespace Domain.Interfaces.Services
         Task<UsuarioDto> CreateAsync(CriarUsuarioDto data);
         Task<UsuarioDto> UpdateAsync(int id, AlterarUsuarioDto data);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<UsuarioDto>> ReadUsuarioGeneroAsync();
 
     }
 }
