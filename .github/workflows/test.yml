@@ -42,7 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
+          dotnet tool update --global dotnet-reportgenerator-globaltool
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build
-          dotnet test Services.UnitTests/Services.UnitTests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test Services.UnitTests/Services.UnitTests.csproj  /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
