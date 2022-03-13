@@ -28,7 +28,6 @@ namespace Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _rabbit = rabbit;
-
         }
 
         public async Task<UsuarioDto> ReadAsync(int id)
