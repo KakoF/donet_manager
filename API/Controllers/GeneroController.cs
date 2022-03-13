@@ -26,6 +26,5 @@ namespace API.Controllers
             var result = await _service.ReadAsync();
             return new ListSuccessResponse<GeneroDto>((int)HttpStatusCode.OK, result, result.Any() ? "Gêneros encontrados" : "Nenhum gênero encontrado");
         }
-
     }
 }
