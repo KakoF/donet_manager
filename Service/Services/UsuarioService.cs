@@ -9,6 +9,7 @@ using Domain.Interfaces.Implementations;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,12 +20,14 @@ namespace Service.Services
         private readonly IUsarioImplementation _implementation;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRabbitMqIntegrator _rabbit;
 
-        public UsuarioService(IUsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(IUsarioImplementation implementation, IMapper mapper, IUnitOfWork unitOfWork, IRabbitMqIntegrator rabbit)
         {
             _implementation = implementation;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _rabbit = rabbit;
 
         }
 
@@ -67,6 +70,8 @@ namespace Service.Services
                 _unitOfWork.BeginTransaction();
                 var result = await _implementation.CreateAsync(entity);
                 _unitOfWork.CommitTransaction();
+                _rabbit.ConfigureQueue("Novo_Usuario_Queue");
+                _rabbit.PublishQueue<Usuario>(result, "Novo_Usuario_Queue");
                 return _mapper.Map<UsuarioDto>(result);
             }
             catch

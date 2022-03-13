@@ -14,6 +14,7 @@ using Domain.Models;
 using Domain.Exceptions;
 using Data.Implementations;
 using Domain.Interfaces.Implementations;
+using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
 
 namespace Services.UnitTests
 {
@@ -25,6 +26,7 @@ namespace Services.UnitTests
         private readonly MockRepository _mockRepository;
         private readonly Mock<IUsarioImplementation> _mockUsuarioRepository;
         Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+        Mock<IRabbitMqIntegrator> _mockRabbit = new Mock<IRabbitMqIntegrator>();
         IMapper _mapper;
 
         public UsuarioServiceTests()
@@ -34,7 +36,8 @@ namespace Services.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose);
             _mockUsuarioRepository = _mockRepository.Create<IUsarioImplementation>();
             _mockUnitOfWork = _mockRepository.Create<IUnitOfWork>();
-            _sut = new UsuarioService(_mockUsuarioRepository.Object, _mapper, _mockUnitOfWork.Object);
+            _mockRabbit = _mockRepository.Create<IRabbitMqIntegrator>();
+            _sut = new UsuarioService(_mockUsuarioRepository.Object, _mapper, _mockUnitOfWork.Object, _mockRabbit.Object);
 
         }
 

@@ -4,6 +4,8 @@ using Data.DataConnector;
 using Data.Interfaces.DataConnector;
 using DI.DependencyInjection;
 using DI.Mappings;
+using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
+using IntegratorRabbitMq.RabbitMqIntegrator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,6 +41,7 @@ namespace API
                 Environment.SetEnvironmentVariable("sqlServer", "Server=127.0.0.1,1433;Database=master_integration_test;User Id=sa;Password=Manager010203!@#;TrustServerCertificate=true;");
                 Environment.SetEnvironmentVariable("redis", "127.0.0.1:6379,password=Manager010203!@#");
                 Environment.SetEnvironmentVariable("redisName", "managerRedis");
+                Environment.SetEnvironmentVariable("rabbit", "amqp://guest:guest@localhost:5673");
             }
 
             services.AddDistributedRedisCache(options =>
@@ -48,6 +51,7 @@ namespace API
 
             });
             services.AddScoped<IDbConnector>(db => new SqlServerConnector(_environment.IsEnvironment("Testing") ? Environment.GetEnvironmentVariable("sqlServer") : Configuration.GetConnectionString("sqlServer")));
+            services.AddScoped<IRabbitMqIntegrator>(db => new RabbitMqIntegrator(_environment.IsEnvironment("Testing") ? Environment.GetEnvironmentVariable("rabbit") : Configuration.GetConnectionString("rabbit")));
             ConfigureService.ConfigureDependenciesService(services);
             ConfigureRepository.ConfigureDependenciesRepository(services);
             services.AddControllers(options => options.Filters.Add<ValidationMiddleware>())

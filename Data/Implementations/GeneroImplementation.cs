@@ -14,7 +14,7 @@ namespace Data.Implementations
 {
     public class GeneroImplementation : Repository<Genero>, IGeneroImplementation
     {
-
+        protected readonly IRedisIntegrator _cache;
         protected override string InsertQuery => "";
         protected override string InsertQueryReturnInserted => "";
         protected override string UpdateByIdQuery => "";
@@ -22,16 +22,8 @@ namespace Data.Implementations
         protected override string SelectAllQuery => $"SELECT * FROM [{nameof(Genero)}]";
         protected override string SelectByIdQuery => "";
 
-        protected override bool CreateCache => false;
-        protected override bool CreateListCache => false;
-        protected override bool ReadCache => false;
-        protected override bool ReadListCache => false;
-        protected override int MinutesCacheTime => 0;
-        protected override string NameDataCache => nameof(Genero);
-
-
-        public GeneroImplementation(IDbConnector dbConnector, IRedisIntegrator cache) : base(dbConnector, cache) { }
-
-        
+        public GeneroImplementation(IDbConnector dbConnector, IRedisIntegrator cache) : base(dbConnector) {
+         _cache = cache;
+        }
     }
 }
