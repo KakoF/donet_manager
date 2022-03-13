@@ -42,7 +42,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          dotnet tool update --global dotnet-reportgenerator-globaltool
+          dotnet tool install --global dotnet-sonarscanner --version 5.2.0
+          dotnet tool update dotnet-reportgenerator-globaltool -g --version 4.8.7
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet test Services.UnitTests/Services.UnitTests.csproj  /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx
+          dotnet test Services.UnitTests/Services.UnitTests.csproj  --no-build --collect:"XPlat Code Coverage"
+          reportgenerator "-reports:*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
