@@ -36,13 +36,16 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Install ReportGenerator Global Tool
+        shell: pwsh
+        run: |
+          install dotnet-reportgenerator-globaltool -g
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          dotnet tool install --tool-path tools dotnet-reportgenerator-globaltool
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet test Services.UnitTests/Services.UnitTests.csproj --no-build --collect:"XPlat Code Coverage"
           reportgenerator "-reports:*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
