@@ -22,13 +22,19 @@ services:
       - '1433'
   rabbitmq:
         container_name: "rabbitmq"
-        image: rabbitmq:3.8-management-alpine
-        environment:
-            - RABBITMQ_DEFAULT_USER=user
-            - RABBITMQ_DEFAULT_PASS=Manager010203!@#
+        image: rabbitmq:3-management
         ports:
             # AMQP protocol port
             - '5672:5672'
             # HTTP management UI
             - '15672:15672'
+  rabbitmqIntegration:
+        container_name: "rabbitmqIntegration"
+        image: rabbitmq:3-management
+        ports:
+            # AMQP protocol port
+            - '5673:5672'
+            # HTTP management UI
+            - '15673:15672'
+            
     
