@@ -39,7 +39,7 @@ jobs:
       - name: Install ReportGenerator Global Tool
         shell: pwsh
         run: |
-          install dotnet-reportgenerator-globaltool -g
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.5.0
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
