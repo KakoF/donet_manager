@@ -57,6 +57,7 @@ namespace Data.Implementations
 
         public new async Task<Usuario> UpdateAsync(int id, Usuario data)
         {
+            _cache.Remove($"List_{nameof(Usuario)}");
             _cache.Remove($"{nameof(Usuario)}_{id}");
             return await base.UpdateAsync(id, data);
         }
