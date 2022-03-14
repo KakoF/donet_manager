@@ -58,7 +58,6 @@ namespace Service.Services
 
         public async Task<UsuarioDto> CreateAsync(CriarUsuarioDto data)
         {
-
             try
             {
                 var model = _mapper.Map<UsuarioModel>(data);
