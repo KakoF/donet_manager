@@ -1,13 +1,10 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Implementations
 {
+    //IGeneroImplementation não é um nome que diz muita coisa ao utilizá-lo numa injeção de dependência, por exemplo...
+    // O Ideal é que seja chamada de IGeneroRepository
     public interface IGeneroImplementation : IRepository<Genero>
     {
        

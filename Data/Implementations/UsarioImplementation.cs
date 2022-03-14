@@ -12,6 +12,70 @@ using System.Threading.Tasks;
 
 namespace Data.Implementations
 {
+    // Nesta classe vc manipula cache e SQL. Num cenário de simplicidade, OK!
+    // Ainda assim, o melhor indicado é vc separá-los, usando uma abstração pra cada um. Por exemplo: IUsuarioSqlRepository e IUsuarioRedisRepository (ambas herdando de IUsuarioRepository).
+    // Na implementação de IUsuarioRedisRepository, vc tem a referência do IUsuarioSqlRepository. 
+    // O exemplo abaixo, é um design pattern chamado decorator:
+
+    // Obs1: vc não precisa das propriedades da classe base:
+    //protected abstract string InsertQuery { get; }
+    //protected abstract string InsertQueryReturnInserted { get; }
+    //protected abstract string UpdateByIdQuery { get; }
+    //protected abstract string DeleteByIdQuery { get; }
+    //protected abstract string SelectByIdQuery { get; }
+    //protected abstract string SelectAllQuery { get; }
+
+    // Obs2: Na configuração da injeção de dependencia, vc deve manter algo assim: services.AddSingleton<IUsarioImplementation, UsuarioRedisRepository>
+    // Aqui vc está configurando que a sua implementação correta (primária) é a do Redis de tal forma que no domínio vc não deve saber se vai gravar os dados em cache, sql ou qualquer outra opção.
+
+
+    public interface IUsuarioRedisRepository : IUsarioImplementation { }
+    public interface IUsuarioSqlRepository : IUsarioImplementation { }
+    public class UsuarioRedisRepository : IUsuarioRedisRepository
+    {
+        private readonly IUsuarioSqlRepository _sql;
+        protected readonly IRedisIntegrator _cache;
+
+        public UsuarioRedisRepository(IUsuarioSqlRepository sql, IRedisIntegrator cache)
+        {
+            _sql = sql;
+            _cache = cache;
+        }
+
+        public async Task<Usuario> CreateAsync(Usuario data)
+        {
+
+            _cache.Remove($"List_{nameof(Usuario)}");
+            return await _sql.CreateAsync(data);            
+        }
+
+        public Task<bool> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Usuario> ReadAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Usuario>> ReadAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Usuario>> ReadUsuarioGeneroAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Usuario> UpdateAsync(int id, Usuario data)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
     public class UsarioImplementation : Repository<Usuario>, IUsarioImplementation
     {
         protected readonly IRedisIntegrator _cache;

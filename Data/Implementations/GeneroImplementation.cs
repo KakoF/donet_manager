@@ -1,14 +1,8 @@
-﻿using Dapper;
-using Data.Interfaces.DataConnector;
+﻿using Data.Interfaces.DataConnector;
 using Data.Interfaces.Redis;
 using Data.Repositories;
 using Domain.Entities;
 using Domain.Interfaces.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Implementations
 {

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Data.Interfaces.DataConnector;
-using Data.Interfaces.Redis;
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using System;
