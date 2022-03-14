@@ -35,6 +35,7 @@ namespace Data.Implementations
 
         public new async Task<bool> DeleteAsync(int id)
         {
+            _cache.Remove($"List_{nameof(Usuario)}");
             _cache.Remove($"{nameof(Usuario)}_{id}");
             return await base.DeleteAsync(id);
         }
@@ -44,7 +45,10 @@ namespace Data.Implementations
             var dataCache = await _cache.GetAsync<Usuario>($"{nameof(Usuario)}_{id}");
             if (dataCache != null)
                 return dataCache;
-            return await base.ReadAsync(id);
+            
+            var data = await base.ReadAsync(id);
+            _cache.Set($"{nameof(Usuario)}_{id}", data);
+            return data;
         }
 
         public new async Task<IEnumerable<Usuario>> ReadAsync()
@@ -52,7 +56,10 @@ namespace Data.Implementations
             var dataCache = await _cache.GetListAsync<Usuario>($"List_{nameof(Usuario)}");
             if (dataCache != null)
                 return dataCache;
-            return await base.ReadAsync();
+
+            var data = await base.ReadAsync();
+            _cache.SetList($"List_{nameof(Usuario)}", data);
+            return data;
         }
 
         public new async Task<Usuario> UpdateAsync(int id, Usuario data)
