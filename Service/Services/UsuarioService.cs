@@ -68,8 +68,7 @@ namespace Service.Services
                 _unitOfWork.BeginTransaction();
                 var result = await _implementation.CreateAsync(entity);
                 _unitOfWork.CommitTransaction();
-                _rabbit.ConfigureQueue("Novo_Usuario_Queue");
-                _rabbit.PublishQueue<Usuario>(result, "Novo_Usuario_Queue");
+                _rabbit.ConfigurePublshQueue(result, "Novo_Usuario_Queue");
                 return _mapper.Map<UsuarioDto>(result);
             }
             catch
