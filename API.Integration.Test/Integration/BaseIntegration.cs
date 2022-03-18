@@ -21,7 +21,7 @@ namespace API.Integration.Test.Integration
             hostApi = "https://localhost:44372/api/";
             var builder = new WebHostBuilder().UseEnvironment("Testing").UseStartup<Startup>();
             var server = new TestServer(builder);
-            AutoMapperFixture autmapper = new AutoMapperFixture();
+            //AutoMapperFixture autmapper = new AutoMapperFixture();
             client = server.CreateClient();
 
         }

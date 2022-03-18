@@ -14,18 +14,18 @@ namespace API.Integration.Test
 {
     public class UsuarioCrudIntegration : BaseIntegration
     {
-        public string _nome { get; set; }
-        public string _email{ get; set; }
+        public int _id{ get; set; }
+        public string _nome { get; set; } = "Marcos";
+        public string _email { get; set; } = "marcos@gmail.com";
+        public int _genero { get; set; } = 1;
 
         [Fact]
         public async Task Should_Do_CrudUsuario()
         {
-            _nome = "Marcos";
-            _email = "marcos@gmail.com";
             var response = new HttpResponseMessage();
             var result = "";
 
-            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email, GeneroId = 1 };
+            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email, GeneroId = _genero };
             response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
             result = await response.Content.ReadAsStringAsync();
 
@@ -42,30 +42,44 @@ namespace API.Integration.Test
             Assert.NotNull(getListResponse.Data);
 
 
-            var id = postResponse.Data.Id;
-            response = await GetAsync($"{hostApi}usuario/{id}", client);
+            _id = postResponse.Data.Id;
+            response = await GetAsync($"{hostApi}usuario/{_id}", client);
             result = await response.Content.ReadAsStringAsync();
             var getResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDto>>(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(getResponse.Data);
 
 
-            var usuarioAlterarDto = new AlterarUsuarioDto() { Nome = _nome, GeneroId = 1 };
-            response = await PutJsonAsync(usuarioAlterarDto, $"{hostApi}usuario/{id}", client);
+            var usuarioAlterarDto = new AlterarUsuarioDto() { Nome = _nome, GeneroId = _genero };
+            usuarioAlterarDto.Nome = "KAKO";
+            response = await PutJsonAsync(usuarioAlterarDto, $"{hostApi}usuario/{_id}", client);
             result = await response.Content.ReadAsStringAsync();
 
             var putResponse = JsonConvert.DeserializeObject<DataSuccessResponse<UsuarioDto>>(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(_nome, putResponse.Data.Nome);
+            Assert.Equal(usuarioAlterarDto.Nome, putResponse.Data.Nome);
             Assert.Equal(_email, putResponse.Data.Email);
             Assert.True(putResponse.Data.Id != default(int));
 
            
-            response = await DeleteAsync($"{hostApi}usuario/{id}", client);
-            result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            //response = await DeleteAsync($"{hostApi}usuario/{id}", client);
+            //result = await response.Content.ReadAsStringAsync();
+            //Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
 
+        }
+
+        [Fact]
+        public async Task Should_NotDo_CreateUsuario()
+        {
+            _ = new HttpResponseMessage();
+            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = "", GeneroId = _genero };
+            HttpResponseMessage response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var dataResult = JsonConvert.DeserializeObject<ErrorResponse>(result);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotEqual(dataResult.Message, string.Empty);
         }
     }
 }
