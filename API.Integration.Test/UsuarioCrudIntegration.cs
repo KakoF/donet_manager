@@ -62,9 +62,8 @@ namespace API.Integration.Test
             Assert.True(putResponse.Data.Id != default(int));
 
            
-            //response = await DeleteAsync($"{hostApi}usuario/{id}", client);
-            //result = await response.Content.ReadAsStringAsync();
-            //Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            response = await DeleteAsync($"{hostApi}usuario/{_id}", client);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
 
         }
