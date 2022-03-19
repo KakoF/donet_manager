@@ -14,6 +14,7 @@ namespace DI.DependencyInjection
             serviceCollection.AddTransient<IGeneroService, GeneroService>();
             serviceCollection.AddTransient<IUsarioImplementation, UsarioImplementation>();
             serviceCollection.AddTransient<IGeneroImplementation, GeneroImplementation>();
+            serviceCollection.AddTransient<IAdviceService, AdviceService>();
 
         }
     }

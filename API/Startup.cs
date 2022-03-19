@@ -4,6 +4,8 @@ using Data.DataConnector;
 using Data.Interfaces.DataConnector;
 using DI.DependencyInjection;
 using DI.Mappings;
+using IntegratorHttpClient;
+using IntegratorHttpClient.interfaces;
 using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
 using IntegratorRabbitMq.RabbitMqIntegrator;
 using Microsoft.AspNetCore.Builder;
@@ -71,6 +73,11 @@ namespace API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+
+            services.AddHttpClient<IAdviceClient, AdviceClient>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["CLients:advice:basePath"]);
             });
         }
 

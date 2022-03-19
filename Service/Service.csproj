@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\IntegratorHttpClient\IntegratorHttpClient.csproj" />
     <ProjectReference Include="..\IntegratorRabbitMq\IntegratorRabbitMq.csproj" />
   </ItemGroup>
 
