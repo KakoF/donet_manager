@@ -14,7 +14,7 @@ namespace IntegratorHttpClient.factory
         protected readonly HttpClient _httpClient;
         //protected abstract string _remoteServiceBaseUrl { get; }
 
-        public ClientFactory(HttpClient httpClient)
+        protected ClientFactory(HttpClient httpClient)
         {
             _httpClient = httpClient;
             //_httpClient.BaseAddress = new Uri(_remoteServiceBaseUrl);
