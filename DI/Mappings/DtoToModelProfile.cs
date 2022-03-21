@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.DTO.Clients.Advice;
+using Domain.DTO.Clients.ChuckNorris;
 using Domain.DTO.Usuario;
 using Domain.Models;
 using Domain.Models.Clients;
@@ -16,6 +17,7 @@ namespace DI.Mappings
             CreateMap<GeneroDto, GeneroModel>().ReverseMap();
             CreateMap<AdviceDto, AdviceModel>().ReverseMap();
             CreateMap<SlipDto, SlipModel>().ReverseMap();
+            CreateMap<ChuckNorrisDto, ChuckNorrisModel>().ReverseMap();
         }
     }
 }

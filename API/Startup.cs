@@ -78,6 +78,10 @@ namespace API
             services.AddHttpClient<IAdviceClient, AdviceClient>(client =>
             {
                 client.BaseAddress = new Uri(Configuration["CLients:advice:basePath"]);
+            }); 
+            services.AddHttpClient<IChukNorrisClient, ChukNorrisClient>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["CLients:chucknorris:basePath"]);
             });
         }
 
