@@ -16,8 +16,16 @@ namespace Data.Redis
         }
         public async Task<T> GetAsync<T>(string key)
         {
-            var json = await _redisCache.GetStringAsync(key);
-            return (json == null) ? default(T) : JsonConvert.DeserializeObject<T>(json);
+            try
+            {
+                var json = await _redisCache.GetStringAsync(key);
+                return (json == null) ? default(T) : JsonConvert.DeserializeObject<T>(json);
+            }
+            catch
+            {
+                //loggin
+                return default(T);
+            }
         }
         public void Set(string key, object value, int expirationMinutes = 1)
         {
@@ -29,22 +37,45 @@ namespace Data.Redis
         }
         public void Remove(string key)
         {
-            _redisCache.RemoveAsync(key);
+            try
+            {
+                _redisCache.RemoveAsync(key);
+            }
+            catch
+            {
+                //loggin
+            }
+
         }
 
         public async Task<IEnumerable<T>> GetListAsync<T>(string key)
         {
-            var json = await _redisCache.GetStringAsync(key);
-            return (json == null) ? default(IEnumerable<T>) : JsonConvert.DeserializeObject<IEnumerable<T>>(json);
+            try
+            {
+                var json = await _redisCache.GetStringAsync(key);
+                return (json == null) ? default(IEnumerable<T>) : JsonConvert.DeserializeObject<IEnumerable<T>>(json);
+            }
+            catch
+            {
+                return default(IEnumerable<T>);
+                //loggin
+            }
         }
 
         public void SetList(string key, IEnumerable<object> value, int expirationMinutes = 1)
         {
-            DistributedCacheEntryOptions opcoesCache = new DistributedCacheEntryOptions();
-            opcoesCache.SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationMinutes));
+            try
+            {
+                DistributedCacheEntryOptions opcoesCache = new DistributedCacheEntryOptions();
+                opcoesCache.SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationMinutes));
 
-            var json = JsonConvert.SerializeObject(value);
-            _redisCache.SetStringAsync(key, json, opcoesCache);
+                var json = JsonConvert.SerializeObject(value);
+                _redisCache.SetStringAsync(key, json, opcoesCache);
+            }
+            catch
+            {
+                //loggin
+            }
         }
     }
 }

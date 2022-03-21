@@ -8,7 +8,6 @@ namespace Data.Implementations
 {
     public class GeneroImplementation : Repository<Genero>, IGeneroImplementation
     {
-        protected readonly IRedisIntegrator _cache;
         protected override string InsertQuery => "";
         protected override string InsertQueryReturnInserted => "";
         protected override string UpdateByIdQuery => "";
@@ -16,8 +15,6 @@ namespace Data.Implementations
         protected override string SelectAllQuery => $"SELECT * FROM [{nameof(Genero)}]";
         protected override string SelectByIdQuery => "";
 
-        public GeneroImplementation(IDbConnector dbConnector, IRedisIntegrator cache) : base(dbConnector) {
-         _cache = cache;
-        }
+        public GeneroImplementation(IDbConnector dbConnector) : base(dbConnector) {}
     }
 }
