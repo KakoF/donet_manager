@@ -1,11 +1,7 @@
 ﻿using API.Helpers;
 using Domain.DTO.Clients.Advice;
-using Domain.DTO.Usuario;
-using Domain.Exceptions;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 

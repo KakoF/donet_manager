@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Clients;
-using System.Threading.Tasks;
 
 namespace IntegratorHttpClient.interfaces
 {

@@ -69,10 +69,34 @@ namespace API.Integration.Test
         }
 
         [Fact]
-        public async Task Should_NotDo_CreateUsuario()
+        public async Task Should_NotDo_CreateUsuario_NomeIsEmpty()
+        {
+            _ = new HttpResponseMessage();
+            var UsuarioDto = new CriarUsuarioDto() { Nome = "", Email = _email, GeneroId = _genero };
+            HttpResponseMessage response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var dataResult = JsonConvert.DeserializeObject<ErrorResponse>(result);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotEqual(dataResult.Message, string.Empty);
+        }
+        [Fact]
+        public async Task Should_NotDo_CreateUsuario_EmailIsEmpty()
         {
             _ = new HttpResponseMessage();
             var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = "", GeneroId = _genero };
+            HttpResponseMessage response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var dataResult = JsonConvert.DeserializeObject<ErrorResponse>(result);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotEqual(dataResult.Message, string.Empty);
+        }
+        [Fact]
+        public async Task Should_NotDo_CreateUsuario_GeneroiIsEmpty()
+        {
+            _ = new HttpResponseMessage();
+            var UsuarioDto = new CriarUsuarioDto() { Nome = _nome, Email = _email, GeneroId = 0};
             HttpResponseMessage response = await PostJsonAsync(UsuarioDto, $"{hostApi}usuario", client);
             var result = await response.Content.ReadAsStringAsync();
 

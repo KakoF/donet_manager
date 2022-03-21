@@ -1,18 +1,15 @@
 using Xunit;
 using Moq;
-using Domain.Interfaces.Repositories;
 using Domain.Entities;
 using Service.Services;
 using AutoMapper;
 using Domain.DTO.Usuario;
 using Data.Interfaces.DataConnector;
-using Data.Interfaces.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.Models;
 using Domain.Exceptions;
-using Data.Implementations;
 using Domain.Interfaces.Implementations;
 using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
 
@@ -43,7 +40,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public async void GetAsync_ValidId_ReturnUser()
+        public async void GetAsync_ValidId_ReturnUsuario()
         {
             //Arr
             int id = It.IsAny<int>();
@@ -80,7 +77,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public async void GetAsync_ReturnListUsers()
+        public async void GetAsync_ReturnListUsuarios()
         {
             //Arr
             var entitys = new List<Usuario>()
@@ -204,7 +201,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public async void CreateAsync_UserDtoAccepted_ReturnUserDto()
+        public async void CreateAsync_UsuarioDtoAccepted_ReturnUsuarioDto()
         {
             //Arr
             Usuario entity = new Usuario(1, "Marcos", "kakoferrare@gmail.com", 1, DateTime.Now, null);
@@ -298,7 +295,7 @@ namespace Services.UnitTests
 
 
         [Fact]
-        public async void UpdateAsync_UserDtoAccepted_ReturnUserDto()
+        public async void UpdateAsync_UsuarioDtoAccepted_ReturnUsuarioDto()
         {
             //Arr
             var updateModel = new AlterarUsuarioDto()
