@@ -11,17 +11,15 @@ namespace IntegratorRabbitMq.RabbitMqIntegrator
 {
     public class RabbitMqIntegrator : IRabbitMqIntegrator
     {
-        private readonly ConnectionFactory _connectionFactory;
-        private readonly IConnection _model;
         private readonly IModel _channel;
         
         public RabbitMqIntegrator(string connectionStringRabbit)
         {
-            _connectionFactory = new ConnectionFactory
+            var _connectionFactory = new ConnectionFactory
             {
                 Uri = new Uri(connectionStringRabbit)
             };
-            _model = _connectionFactory.CreateConnection();
+            var _model = _connectionFactory.CreateConnection();
             _channel = _model.CreateModel();
         }
 

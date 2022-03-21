@@ -12,7 +12,6 @@ namespace Data.Repositories
     public abstract class Repository<T> : IRepository<T> where T : Base
     {
         protected readonly IDbConnector _dbConnector;
-        //protected readonly IRedisIntegrator _cache;
 
         protected abstract string InsertQuery { get; }
         protected abstract string InsertQueryReturnInserted { get; }
@@ -21,7 +20,7 @@ namespace Data.Repositories
         protected abstract string SelectByIdQuery { get; }
         protected abstract string SelectAllQuery { get; }
        
-        public Repository(IDbConnector dbConnector)
+        protected Repository(IDbConnector dbConnector)
         {
             _dbConnector = dbConnector;
         }
