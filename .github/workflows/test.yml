@@ -52,5 +52,5 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
-          dotnet test Services.UnitTests/Services.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover -l trx
+          dotnet test Services.UnitTests/Services.UnitTests.csproj --collect "DotnetCodeCoverage" CodeCoverage.exe analyze /output: "%CD%\DotnetCoverage.coveragexml" "%CD%\DotnetCoverage.coverage"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
