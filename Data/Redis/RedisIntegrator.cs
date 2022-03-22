@@ -1,8 +1,11 @@
 ﻿using Data.Interfaces.Redis;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Data.Redis
@@ -10,15 +13,19 @@ namespace Data.Redis
     public class RedisIntegrator : IRedisIntegrator
     {
         private readonly IDistributedCache _redisCache;
-        public RedisIntegrator(IDistributedCache distributedCache)
+        private readonly IConfiguration _configuration;
+        private readonly string NAME;
+        public RedisIntegrator(IDistributedCache distributedCache, IConfiguration configuration)
         {
+            _configuration = configuration;
+            NAME = _configuration["redisSolution"];
             _redisCache = distributedCache;
         }
         public async Task<T> GetAsync<T>(string key)
         {
             try
             {
-                var json = await _redisCache.GetStringAsync(key);
+                var json = await _redisCache.GetStringAsync($"{NAME}{key}");
                 return (json == null) ? default(T) : JsonConvert.DeserializeObject<T>(json);
             }
             catch
@@ -33,13 +40,13 @@ namespace Data.Redis
             opcoesCache.SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationMinutes));
 
             var json = JsonConvert.SerializeObject(value);
-            _redisCache.SetStringAsync(key, json, opcoesCache);
+            _redisCache.SetStringAsync($"{NAME}{key}", json, opcoesCache);
         }
         public void Remove(string key)
         {
             try
             {
-                _redisCache.RemoveAsync(key);
+                _redisCache.RemoveAsync($"{NAME}{key}");
             }
             catch
             {
@@ -52,7 +59,7 @@ namespace Data.Redis
         {
             try
             {
-                var json = await _redisCache.GetStringAsync(key);
+                var json = await _redisCache.GetStringAsync($"{NAME}{key}");
                 return (json == null) ? default(IEnumerable<T>) : JsonConvert.DeserializeObject<IEnumerable<T>>(json);
             }
             catch
@@ -70,7 +77,7 @@ namespace Data.Redis
                 opcoesCache.SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationMinutes));
 
                 var json = JsonConvert.SerializeObject(value);
-                _redisCache.SetStringAsync(key, json, opcoesCache);
+                _redisCache.SetStringAsync($"{NAME}{key}", json, opcoesCache);
             }
             catch
             {
