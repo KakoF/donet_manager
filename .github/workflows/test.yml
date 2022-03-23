@@ -52,5 +52,6 @@ jobs:
         run: |
           dotnet sonarscanner begin /k:"KakoF_dotnet_manager" /o:"kakof" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
-          dotnet test Services.UnitTests/Services.UnitTests.csproj --logger "trx;logfilename=coverage.opencover.xml" --results-directory ./coverage
+          dotnet test Services.UnitTests/Services.UnitTests.csproj  --collect:"XPlat Code Coverage" --results-directory ./coverage
+          reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube"
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
