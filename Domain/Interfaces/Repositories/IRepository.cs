@@ -14,5 +14,7 @@ namespace Domain.Interfaces.Repositories
         Task<T> CreateAsync(T data);
         Task<T> UpdateAsync(int id, T data);
         Task<bool> DeleteAsync(int id);
+        Task<Tstruct> ReadObjectAsync<Tstruct>(string query);
+        Task<IEnumerable<Tstruct>> ReadListAsync<Tstruct>(string query);
     }
 }

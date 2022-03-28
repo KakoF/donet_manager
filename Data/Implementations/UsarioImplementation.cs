@@ -77,13 +77,6 @@ namespace Data.Implementations
             return data;
         }
 
-        public async Task<IEnumerable<Usuario>> ReadUsuarioGeneroTal(int generoId)
-        {
-            string query = $"SELECT * FROM [{nameof(Usuario)}] u INNER JOIN [{nameof(Genero)}] g ON u.{nameof(Usuario.GeneroId)} = g.{nameof(Genero.Id)} where {nameof(Usuario.GeneroId)}";
-            var data = await _dbConnector.dbConnection.QueryAsync<Usuario, Genero, Usuario>(query, map: (usuario, genero) => FuncMapUsuarioGenero(usuario, genero), _dbConnector.dbTransaction);
-            return data;
-        }
-
         private readonly Func<Usuario, Genero, Usuario> FuncMapUsuarioGenero = (usuario, genero) =>
         {
             usuario.InitGenero(genero);

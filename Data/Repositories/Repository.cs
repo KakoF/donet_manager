@@ -55,5 +55,15 @@ namespace Data.Repositories
             await _dbConnector.dbConnection.ExecuteAsync(UpdateByIdQuery, data, _dbConnector.dbTransaction);
             return data;
         }
+
+        public async Task<Tstruct> ReadObjectAsync<Tstruct>(string query)
+        {
+            return await _dbConnector.dbConnection.QueryFirstOrDefaultAsync<Tstruct>(query);
+        }
+
+        public async Task<IEnumerable<Tstruct>> ReadListAsync<Tstruct>(string query)
+        {
+            return await _dbConnector.dbConnection.QueryAsync<Tstruct>(query);
+        }
     }
 }
