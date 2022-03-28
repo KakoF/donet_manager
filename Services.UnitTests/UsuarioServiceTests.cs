@@ -96,6 +96,27 @@ namespace Services.UnitTests
         }
 
         [Fact]
+        public async void GetAsync_ReturnListUsuariosWithGenero()
+        {
+            //Arr
+            var usuario = new Usuario(1, "Marcos", "marcosferrare@gmail.com", 1, DateTime.Now, null);
+            usuario.InitGenero(new Genero(1, "Genero", DateTime.Now, null));
+            var entitys = new List<Usuario>()
+            {
+                usuario,
+                usuario
+            };
+            _mockUsuarioRepository.Setup(c => c.ReadUsuarioGeneroAsync()).ReturnsAsync(entitys);
+
+            //Act
+            var result = await _sut.ReadUsuarioGeneroAsync();
+
+            //Assert
+            _mockUsuarioRepository.Verify(c => c.ReadUsuarioGeneroAsync(), Times.Once);
+            Assert.Equal(result.Count(), _mapper.Map<List<UsuarioDto>>(entitys).Count);
+        }
+
+        [Fact]
         public async void DeleteAsync_ValidId_ReturnTrue()
         {
             //Arr
@@ -332,7 +353,9 @@ namespace Services.UnitTests
                 cfg.CreateMap<CriarUsuarioDto, Usuario>().ReverseMap();
                 cfg.CreateMap<AlterarUsuarioDto, Usuario>().ReverseMap();
                 cfg.CreateMap<Usuario, UsuarioModel>().ReverseMap();
-
+                cfg.CreateMap<Genero, GeneroModel>().ReverseMap();
+                cfg.CreateMap<Genero, GeneroDto>().ReverseMap();
+                cfg.CreateMap<GeneroDto, GeneroModel>().ReverseMap();
 
             });
             _mapper = config.CreateMapper();
