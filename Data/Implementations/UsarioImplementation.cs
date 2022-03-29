@@ -70,6 +70,20 @@ namespace Data.Implementations
             return await base.UpdateAsync(id, data);
         }
 
+        public async Task<IEnumerable<Usuario>> QueryGraphql()
+        {
+            string query = $"SELECT * FROM [{nameof(Usuario)}] u INNER JOIN [{nameof(Genero)}] g ON u.{nameof(Usuario.GeneroId)} = g.{nameof(Genero.Id)}";
+
+            var data = await _dbConnector.dbConnection.QueryAsync<Usuario, Genero, Usuario>(query, map: (usuario, genero) => FuncMapUsuarioGenero(usuario, genero), _dbConnector.dbTransaction);
+            return data;
+        }  
+        public async Task<Usuario> QueryGraphql(int id)
+        {
+            string query = $"SELECT * FROM [{nameof(Usuario)}] u INNER JOIN [{nameof(Genero)}] g ON u.{nameof(Usuario.GeneroId)} = g.{nameof(Genero.Id)} Where u.{nameof(Usuario.Id)} = @Id";
+            var data = await _dbConnector.dbConnection.QueryAsync<Usuario, Genero, Usuario>(query,map: (usuario, genero) => FuncMapUsuarioGenero(usuario, genero), new { Id = id }, _dbConnector.dbTransaction);
+            return data.FirstOrDefault();
+        }
+
         public async Task<IEnumerable<Usuario>> ReadUsuarioGeneroAsync()
         {
             string query = $"SELECT * FROM [{nameof(Usuario)}] u INNER JOIN [{nameof(Genero)}] g ON u.{nameof(Usuario.GeneroId)} = g.{nameof(Genero.Id)}";

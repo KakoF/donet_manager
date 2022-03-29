@@ -11,5 +11,7 @@ namespace Domain.Interfaces.Implementations
     public interface IUsarioImplementation : IRepository<Usuario>
     {
         public Task<IEnumerable<Usuario>> ReadUsuarioGeneroAsync();
+        public Task<IEnumerable<Usuario>> QueryGraphql();
+        public Task<Usuario> QueryGraphql(int id);
     }
 }

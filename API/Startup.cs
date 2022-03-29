@@ -10,17 +10,12 @@ using IntegratorRabbitMq.Interfaces.RabbitMqIntegrator;
 using IntegratorRabbitMq.RabbitMqIntegrator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Service.Graphql;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API
 {
@@ -70,6 +65,7 @@ namespace API
             services.AddSingleton(mapper);
             services.AddSingleton(_ => Configuration);
             services.AddControllers();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -83,6 +79,9 @@ namespace API
             {
                 client.BaseAddress = new Uri(Configuration["CLients:chucknorris:basePath"]);
             });
+            services.AddGraphQLServer()
+               .AddQueryType(q => q.Name("Query"))
+               .AddType<UsuarioQueryResolver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +105,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGraphQL();
             });
         }
     }
