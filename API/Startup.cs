@@ -81,7 +81,8 @@ namespace API
             });
             services.AddGraphQLServer()
                .AddQueryType(q => q.Name("Query"))
-               .AddType<UsuarioQueryResolver>();
+               .AddType<UsuarioQueryResolver>()
+               .AddType<GeneroQueryResolver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -25,5 +25,10 @@ namespace Domain.Entities
         {
            Genero = genero;
         }
+
+        public void SetGeneroId(int generoId)
+        {
+            GeneroId = generoId;
+        }
     }
 }
