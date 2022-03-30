@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31829.152
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09B4A180-7281-442F-A85F-E45EC897FF7E}"
 EndProject
@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Integration.Test", "API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratorRabbitMq", "IntegratorRabbitMq\IntegratorRabbitMq.csproj", "{3369EC79-B831-48A8-A5D4-D665DFAB6271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegratorHttpClient", "IntegratorHttpClient\IntegratorHttpClient.csproj", "{F749781E-2BFD-4BC2-943F-564B3A4F5DF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratorHttpClient", "IntegratorHttpClient\IntegratorHttpClient.csproj", "{F749781E-2BFD-4BC2-943F-564B3A4F5DF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integrator.UnitTests", "Integrator.UnitTests\Integrator.UnitTests.csproj", "{54C49959-E910-4997-9B36-72BCD1CE33BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{F749781E-2BFD-4BC2-943F-564B3A4F5DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F749781E-2BFD-4BC2-943F-564B3A4F5DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F749781E-2BFD-4BC2-943F-564B3A4F5DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54C49959-E910-4997-9B36-72BCD1CE33BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54C49959-E910-4997-9B36-72BCD1CE33BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54C49959-E910-4997-9B36-72BCD1CE33BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54C49959-E910-4997-9B36-72BCD1CE33BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{ADB37177-5DAE-4879-9CFA-8133F48C2D43} = {09B4A180-7281-442F-A85F-E45EC897FF7E}
 		{3369EC79-B831-48A8-A5D4-D665DFAB6271} = {09B4A180-7281-442F-A85F-E45EC897FF7E}
 		{F749781E-2BFD-4BC2-943F-564B3A4F5DF9} = {09B4A180-7281-442F-A85F-E45EC897FF7E}
+		{54C49959-E910-4997-9B36-72BCD1CE33BF} = {09B4A180-7281-442F-A85F-E45EC897FF7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97719FFD-38E8-4EDB-BE42-892132573945}
