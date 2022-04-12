@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -36,9 +37,14 @@ namespace API.Helpers.Middleware
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if (exception is Exception) code = HttpStatusCode.NotFound;
-
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            if (exception is DomainException) code = HttpStatusCode.BadRequest;
+            var result = "";
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development") {
+                var errors = new List<string>() { exception.Message };
+                result = JsonConvert.SerializeObject(new { statusCode = code, message = "Erro interno no servidor", errors = errors });
+            }
+            else
+                result = JsonConvert.SerializeObject(new { statusCode = code, message = "Erro interno no servidor" });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);
